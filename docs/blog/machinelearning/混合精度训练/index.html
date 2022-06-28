@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en-us"><head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="generator" content="Hugo 0.101.0" />
+	
+	<link rel="icon" href="/images/logo.png">
+	
+	<title>混合精度训练 | Walker的博客</title>
+	
+	
+
+	<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://hwk42.github.io/blog/machinelearning/%E6%B7%B7%E5%90%88%E7%B2%BE%E5%BA%A6%E8%AE%AD%E7%BB%83/cover-leticia-pelissari-6_b73NNVieM-unsplash.jpg"/>
+<meta name="twitter:title" content="混合精度训练"/>
+<meta name="twitter:description" content="混合精度训练可以在不改变网络架构的前提下，通过以半精度格式执行操作来显着提高计算速度，同时以单精度存储最少的信息以在网络的关键部分中保留尽可能多的信息。当前深度学习训练/推理使用的主流数值精度是32bit(即FP32)，随着深度学习商用硬件的发展，16bit(FP16/DFP16)混合精度在训练中的应用逐渐成熟，如Intel的NNP，NVIDIA的 Tensor Core。"/>
+
+	<meta property="og:title" content="混合精度训练" />
+<meta property="og:description" content="混合精度训练可以在不改变网络架构的前提下，通过以半精度格式执行操作来显着提高计算速度，同时以单精度存储最少的信息以在网络的关键部分中保留尽可能多的信息。当前深度学习训练/推理使用的主流数值精度是32bit(即FP32)，随着深度学习商用硬件的发展，16bit(FP16/DFP16)混合精度在训练中的应用逐渐成熟，如Intel的NNP，NVIDIA的 Tensor Core。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://hwk42.github.io/blog/machinelearning/%E6%B7%B7%E5%90%88%E7%B2%BE%E5%BA%A6%E8%AE%AD%E7%BB%83/" /><meta property="og:image" content="https://hwk42.github.io/blog/machinelearning/%E6%B7%B7%E5%90%88%E7%B2%BE%E5%BA%A6%E8%AE%AD%E7%BB%83/cover-leticia-pelissari-6_b73NNVieM-unsplash.jpg"/><meta property="article:section" content="blog" />
+<meta property="article:published_time" content="2020-02-19T23:42:15+08:00" />
+<meta property="article:modified_time" content="2020-02-19T23:42:15+08:00" />
+
+
+
+	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp"
+	 crossorigin="anonymous">
+	<link href="https://fonts.googleapis.com/css?family=Righteous%7CMerriweather:300,300i,400,400i,700,700i" rel="stylesheet">
+	<link href="/css/medium.css" rel="stylesheet">
+	<link href="/css/additional.css" rel="stylesheet">
+
+	
+	
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top mediumnavigation nav-down">
+    <div class="container pr-0">
+        
+        <a class="navbar-brand" href="https://hwk42.github.io//">
+
+            
+            <img src="/images/logo.png" alt="logo">
+            
+        </a>
+        
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMediumish" aria-controls="navbarSupportedContent"
+            aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        
+        <div class="collapse navbar-collapse" id="navbarMediumish">
+            
+            <ul class="navbar-nav ml-auto">
+                 
+                <li class="nav-item ">
+                    <a class="nav-link" href="/blog">Blog</a>
+                </li>
+                 
+                <li class="nav-item ">
+                    <a class="nav-link" href="/">About Me</a>
+                </li>
+                
+            </ul>
+        </div>
+        
+    </div>
+</nav>
+
+
+        <div class="site-content">   
+            <div class="container">
+<div class="mainheading">
+    <h1 class="sitetitle">Walker的博客</h1>
+    <p class="lead">
+         人生就是不断的起起起起
+    </p>
+</div><div class="main-content">
+        
+        <div class="container">
+            <div class="row">
+                
+                <div class="col-md-2 pl-0"><div class="share sticky-top sticky-top-offset">
+    <p>Share</p>
+    <ul>
+        <li class="ml-1 mr-1">
+        <a target="_blank" href="https://twitter.com/intent/tweet?text=%e6%b7%b7%e5%90%88%e7%b2%be%e5%ba%a6%e8%ae%ad%e7%bb%83&url=https%3a%2f%2fhwk42.github.io%2fblog%2fmachinelearning%2f%25E6%25B7%25B7%25E5%2590%2588%25E7%25B2%25BE%25E5%25BA%25A6%25E8%25AE%25AD%25E7%25BB%2583%2f" onclick="window.open(this.href, 'twitter-share', 'width=550,height=435');return false;">
+        <i class="fab fa-twitter"></i>
+        </a>
+        </li>
+        
+        <li class="ml-1 mr-1">
+        <a target="_blank" href="https://facebook.com/sharer.php?u=https%3a%2f%2fhwk42.github.io%2fblog%2fmachinelearning%2f%25E6%25B7%25B7%25E5%2590%2588%25E7%25B2%25BE%25E5%25BA%25A6%25E8%25AE%25AD%25E7%25BB%2583%2f" onclick="window.open(this.href, 'facebook-share', 'width=550,height=435');return false;">
+        <i class="fab fa-facebook-f"></i>
+        </a>
+        </li>
+      
+    </ul>
+
+    
+</div>
+</div>
+                                
+                <div class="col-md-9 flex-first flex-md-unordered">
+                    <div class="mainheading">
+                        	
+                        
+                        
+                        
+                        <div class="row post-top-meta">
+                            <div class="col-xs-12 col-md-3 col-lg-2 text-center text-md-left mb-4 mb-md-0 md-nopad-right">
+                                <img class="author-thumb" src="/images/cover.png" alt="Walker">
+                            </div>
+                            <div class="col-xs-12 col-md-9 col-lg-10 text-center text-md-left md-nopad-left">
+                                <a target="_blank" class="link-dark">Walker</a><br>
+                                <span class="author-description">
+                                    dedicate to cool things<br>
+                                    <i class="far fa-star"></i>
+                                    Feb 19, 2020
+                                    <i class="far fa-clock clock"></i>
+                                    1 min read
+                                </span>					
+                            </div>
+                        </div>			
+                        	
+                        
+                                                
+                        
+                        <h1 class="posttitle">混合精度训练</h1> 
+                    </div>
+
+                    
+                    
+                    
+                        <img class="featured-image img-fluid" src="https://hwk42.github.io/blog/machinelearning/%E6%B7%B7%E5%90%88%E7%B2%BE%E5%BA%A6%E8%AE%AD%E7%BB%83/cover-leticia-pelissari-6_b73NNVieM-unsplash.jpg" alt="thumbnail for this post">
+                    
+                    
+
+                    
+                    <div class="article-post">
+                        <p>混合精度训练可以在不改变网络架构的前提下，通过以半精度格式执行操作来显着提高计算速度，同时以单精度存储最少的信息以在网络的关键部分中保留尽可能多的信息。当前深度学习训练/推理使用的主流数值精度是32bit(即FP32)，随着深度学习商用硬件的发展，16bit(FP16/DFP16)混合精度在训练中的应用逐渐成熟，如Intel的NNP，NVIDIA的 Tensor Core。</p>
+<h3 id="什么是fp16">什么是FP16？</h3>
+<p>半精度浮点数是一种计算机使用的二进制浮点数数据类型，使用2字节（16位）存储
+<img src="FP16VSFP32.png" alt="" title="单精度浮点数（FP32）和半精度浮点数（FP16）">
+其中，<code>sign</code>位表示正负，<code>exponent</code>位表示指数（2^(n−15+1(n=0))），<code>fraction</code>位表示的是分数（m/1024）。</p>
+<h3 id="为什么需要低精度">为什么需要低精度</h3>
+<ul>
+<li>
+<p><strong>更少的显存占用</strong> 对比单精度，半精度仅占用一半的字节，相应地可以帮助训练过程节省一半的显存空间。得益于更少的内存占用，低精度也使得限定显存空间下训练更大的模型和更大的mini-batch成为可能。</p>
+</li>
+<li>
+<p><strong>更快的速度</strong> 通过<a href="https://developer.nvidia.com/tensor-cores"> Tensor Cores</a>能加速数学密集型运算，例如线性和卷积层。在大部分测试中，基于FP16的加速方法能够给模型训练带来两倍甚至更快的加速体验。</p>
+</li>
+<li>
+<p><strong>精度无损</strong> 不只是速度快、内存省，训练的效果也并无损失：
+<img src="%E6%B7%B7%E5%90%88%E7%B2%BE%E5%BA%A6%E8%AE%AD%E7%BB%83%E4%B8%8EFP32%E5%87%86%E7%A1%AE%E5%BA%A6%E5%AF%B9%E6%AF%94.jpg" alt=""></p>
+</li>
+</ul>
+<h3 id="使用fp16表示计算带来的问题量化误差quantization-error">使用FP16表示/计算带来的问题：量化误差（Quantization Error）</h3>
+<p>上面列了这么多低精度的好处，那它有没有不好的地方，答案是肯定的。
+<img src="%E4%B8%8D%E5%90%8C%E7%B2%BE%E5%BA%A6%E8%A1%A8%E7%A4%BA%E7%9A%84%E8%8C%83%E5%9B%B4Range%E5%92%8C%E7%B2%BE%E5%BA%A6Precision.png" alt="不同精度表示的范围（Range）和精度（Precision）">
+FP16的动态范围(6x10^-8 ~ 65504) 远低于 FP32的动态范围(1.4x10^-45 ~ 1.7x10^38)， 精度(2^-10) 远粗于 FP32的精度(2^-13)</p>
+<ul>
+<li>
+<p><strong>溢出错误</strong> 狭窄的表示范围带来的溢出错误（Overflow/Underflow）。由于FP16的动态范围比FP32的动态范围要狭窄很多，因此在计算过程中很容易出现上溢出（Overflow，g&gt;65504）和下溢出（Underflow，g&lt;6×10^−8）的错误，溢出之后就会出现“Nan”的问题。在深度学习中，激活函数的的梯度往往要比权重梯度小，更易出现下溢出的情况。
+<img src="%E6%BA%A2%E5%87%BA%E9%94%99%E8%AF%AF.jpg" alt=""></p>
+</li>
+<li>
+<p><strong>舍入错误</strong> 精度不足带来的舍入错误（Rounding Error）.当梯度过小，小于当前区间内的最小间隔时，该次梯度更新可能会失败
+<img src="%E8%88%8D%E5%85%A5%E8%AF%AF%E5%B7%AE.jpg" alt=""></p>
+</li>
+</ul>
+<h3 id="fp16fp32混合精度训练">FP16/FP32混合精度训练</h3>
+<h4 id="混合表示representation">混合表示（Representation）</h4>
+<p>混合精度训练的精髓在于“在内存中用FP16做储存和乘法从而加速计算，用FP32做累加避免舍入误差”。所有权重、激活、梯度均使用FP16表示（存储。使用FP32作为累加器（Accumulator）用于累加FP16的乘积，只在写入内存前转换为FP16。为每一个权重，保留一个高精度（FP32）的主备份（Master Copy）
+<img src="FP32%E4%B8%BB%E5%A4%87%E4%BB%BD.jpg" alt=""></p>
+<h4 id="混合计算math">混合计算（Math）</h4>
+<p>对计算敏感型的层，如全连接层、卷积层等，直接使用FP16进行计算（当然还需要用FP32做累加器）。对BatchNorm、SoftMax等需要对整个 Tensor进行统计操作（如SUM）的， 可从内存读入FP16值后，进行FP32运算以保持精度</p>
+<h4 id="损失放大loss-scaling">损失放大（Loss Scaling）</h4>
+<p>通过混合表示和混合计算，还是会存在有些模型仍无法收敛（如Multibox SSD with VGG-D）或准确率很差（如Seq2Seq），原因是激活梯度的值很小，超出FP16表示的范围，造成下溢出（Underflow）。解决激活梯度下溢出的思路：将所有的激活梯度都放大一定倍数</p>
+<ul>
+<li>在反向计算开始前，将损失变化（dLoss）人为增大</li>
+<li>基于Chain Rule，反向计算得到的所有梯度（激活/权重） 均放大了相同倍数</li>
+<li>在权重更新前，将权重梯度缩小成正常值</li>
+</ul>
+<p><img src="%E6%8D%9F%E5%A4%B1%E6%94%BE%E5%A4%A7.jpg" alt=""></p>
+<h3 id="ampautomatic-mixed-precision在深度学习框架中使用">AMP(Automatic Mixed Precision)在深度学习框架中使用</h3>
+<h4 id="tensorflow">TensorFlow</h4>
+<p>TensorFlow(1.14以上版本)原生支持AMP技术，仅需将<code>tf.keras.optimizers</code>或<code>tf.train</code>包装一下即可：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>opt <span style="color:#f92672">=</span> tf<span style="color:#f92672">.</span>train<span style="color:#f92672">.</span>experimental<span style="color:#f92672">.</span>enable_mixed_precision_graph_rewrite(opt)
+</span></span></code></pre></div><h4 id="pytorch">PyTorch</h4>
+<p>PyTorch中需要借助<a href="https://github.com/NVIDIA/apex">apex</a>这个库</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span><span style="color:#f92672">from</span> apex <span style="color:#f92672">import</span> amp
+</span></span><span style="display:flex;"><span>model, optimizer <span style="color:#f92672">=</span> amp<span style="color:#f92672">.</span>initialize(model, optimizer, opt_level<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;O1&#34;</span>) <span style="color:#75715e"># 这里是“欧一”，不是“零一”</span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">with</span> amp<span style="color:#f92672">.</span>scale_loss(loss, optimizer) <span style="color:#66d9ef">as</span> scaled_loss:
+</span></span><span style="display:flex;"><span>    scaled_loss<span style="color:#f92672">.</span>backward()
+</span></span></code></pre></div><h4 id="mxnet">MXNet</h4>
+<p>MXNet(1.5以上版本)也是原生支持AMP，增加以下代码开启：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-python" data-lang="python"><span style="display:flex;"><span>amp<span style="color:#f92672">.</span>init()
+</span></span><span style="display:flex;"><span>amp<span style="color:#f92672">.</span>init_trainer(trainer)
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">with</span> amp<span style="color:#f92672">.</span>scale_loss(loss, trainer) <span style="color:#66d9ef">as</span> scaled_loss:
+</span></span><span style="display:flex;"><span>   autograd<span style="color:#f92672">.</span>backward(scaled_loss)
+</span></span></code></pre></div><h3 id="reference">Reference</h3>
+<ul>
+<li><a href="https://developer.nvidia.com/automatic-mixed-precision">Automatic Mixed Precision for Deep Learning</a></li>
+<li><a href="https://fyubang.com/2019/08/26/fp16/">[PyTorch]唯快不破：基于Apex的混合精度加速</a></li>
+<li><a href="http://market.itcgb.com/Contents/Intel/OR_AI_BJ/images/Brian_DeepLearning_LowNumericalPrecision.pdf">刘建航,Intel AIPG-低精度表示用于深度学习训练与推断</a></li>
+<li><a href="https://arxiv.org/pdf/1710.03740.pdf">MIXED PRECISION TRAINING</a></li>
+</ul>
+
+                    </div>
+                    
+                    
+                    <div class="after-post-tags">
+                        <ul class="tags">
+                        
+                        <li>
+                        <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0">机器学习</a>
+                        </li>
+                        
+                        </ul>
+                    </div>
+                    
+                    
+                    
+                    <div class="row PageNavigation d-flex justify-content-between font-weight-bold">
+                    
+                        <a class="d-block col-md-6" href="https://hwk42.github.io/blog/cloudnative/%E4%B8%80%E4%B8%AA%E4%BE%8B%E5%AD%90%E7%90%86%E8%A7%A3docker%E5%92%8Ckubernetes/"> &laquo; 一个例子理解Docker和Kubernetes</a>
+                    
+                    
+                        <a class="d-block col-md-6 text-lg-right" href="https://hwk42.github.io/blog/machinelearning/%E7%9B%B8%E4%BC%BC%E5%90%91%E9%87%8F%E6%A3%80%E7%B4%A2/">相似向量搜索：使用Keras实现以图搜图 &raquo;</a>
+                    
+                    <div class="clearfix"></div>
+                    </div>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+    </div>
+
+
+            </div>
+<div class="jumbotron fortags">
+	<div class="d-md-flex h-100">
+		<div class="col-md-4 transpdark align-self-center text-center h-100">
+			<div class="d-md-flex align-items-center justify-content-center h-100">
+				<h2 class="d-md-block d-none align-self-center py-1 font-weight-light">Explore <span class="d-none d-md-inline">→</span></h2>
+			</div>
+		</div>
+		<div class="col-md-8 p-5 align-self-center text-center">
+			
+			<a class="mt-1 mb-1" href="/tags/cbir">cbir</a>
+			
+			<a class="mt-1 mb-1" href="/tags/docker">docker</a>
+			
+			<a class="mt-1 mb-1" href="/tags/gpu">gpu</a>
+			
+			<a class="mt-1 mb-1" href="/tags/ingress">ingress</a>
+			
+			<a class="mt-1 mb-1" href="/tags/k8s">k8s</a>
+			
+			<a class="mt-1 mb-1" href="/tags/kubernetes">kubernetes</a>
+			
+			<a class="mt-1 mb-1" href="/tags/nfs">nfs</a>
+			
+			<a class="mt-1 mb-1" href="/tags/presto">presto</a>
+			
+			<a class="mt-1 mb-1" href="/tags/spark">spark</a>
+			
+			<a class="mt-1 mb-1" href="/tags/traefik">traefik</a>
+			
+			<a class="mt-1 mb-1" href="/tags/trino">trino</a>
+			
+			<a class="mt-1 mb-1" href="/tags/tutorial">tutorial</a>
+			
+			<a class="mt-1 mb-1" href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F">云原生</a>
+			
+			<a class="mt-1 mb-1" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8">分布式存储</a>
+			
+			<a class="mt-1 mb-1" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97">分布式计算</a>
+			
+			<a class="mt-1 mb-1" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE">大数据</a>
+			
+			<a class="mt-1 mb-1" href="/tags/%E5%AD%98%E5%82%A8">存储</a>
+			
+			<a class="mt-1 mb-1" href="/tags/%E5%B7%A5%E5%85%B7">工具</a>
+			
+			<a class="mt-1 mb-1" href="/tags/%E6%8E%A8%E7%90%86">推理</a>
+			
+			<a class="mt-1 mb-1" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0">机器学习</a>
+			
+			<a class="mt-1 mb-1" href="/tags/%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%90%9C%E7%B4%A2">相似性搜索</a>
+			
+		</div>
+	</div>
+</div>
+
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-sm-6 text-center text-lg-left">
+                &copy; Copyright Walker - All rights reserved
+            </div>
+            <div class="col-md-6 col-sm-6 text-center text-lg-right">    
+                <a target="_blank" rel="noopener" href="https://www.wowthemes.net">Mediumish Theme</a> by WowThemes.net
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+        </div>
+
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+<script src="/js/mediumish.js"></script>
+
+    </body>
+</html>

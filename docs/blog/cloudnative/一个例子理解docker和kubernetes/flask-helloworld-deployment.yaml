@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment                                          
+metadata:
+ name: flask-helloworld
+spec:
+ replicas: 3
+ selector:
+  matchLabels:
+    app: flask-helloworld                                        
+ minReadySeconds: 15
+ strategy:
+   type: RollingUpdate                                   
+   rollingUpdate:
+     maxUnavailable: 1                                   
+     maxSurge: 1                                         
+ template:                                              
+   metadata:
+     labels:
+       app: flask-helloworld                                 
+   spec:
+     containers:
+       - image: flask-py3:latest                            
+         imagePullPolicy: IfNotPresent
+         command: ["python3"]
+         args: ["web.py"]
+         name: flask-helloworld                         
+         ports:
+            - containerPort: 5000                        

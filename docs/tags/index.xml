@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on Walker的博客</title>
+    <link>https://hwk42.github.io/tags/</link>
+    <description>Recent content in Tags on Walker的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Walker - All rights reserved</copyright>
+    <lastBuildDate>Mon, 29 Nov 2021 19:30:10 +0800</lastBuildDate><atom:link href="https://hwk42.github.io/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>GPU</title>
+      <link>https://hwk42.github.io/tags/gpu/</link>
+      <pubDate>Mon, 29 Nov 2021 19:30:10 +0800</pubDate>
+      
+      <guid>https://hwk42.github.io/tags/gpu/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>机器学习</title>
+      <link>https://hwk42.github.io/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/</link>
+      <pubDate>Mon, 29 Nov 2021 19:30:10 +0800</pubDate>
+      
+      <guid>https://hwk42.github.io/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Spark</title>
+      <link>https://hwk42.github.io/tags/spark/</link>
+      <pubDate>Tue, 09 Nov 2021 16:31:21 +0800</pubDate>
+      
+      <guid>https://hwk42.github.io/tags/spark/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>推理</title>
+      <link>https://hwk42.github.io/tags/%E6%8E%A8%E7%90%86/</link>
+      <pubDate>Tue, 09 Nov 2021 16:31:21 +0800</pubDate>
+      
+      <guid>https://hwk42.github.io/tags/%E6%8E%A8%E7%90%86/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>NFS</title>
+      <link>https://hwk42.github.io/tags/nfs/</link>
+      <pubDate>Wed, 15 Sep 2021 12:14:47 +0800</pubDate>
+      
+      <guid>https://hwk42.github.io/tags/nfs/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>云原生</title>
+      <link>https://hwk42.github.io/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/</link>
+      <pubDate>Wed, 15 Sep 2021 12:14:47 +0800</pubDate>
+      
+      <guid>https://hwk42.github.io/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>分布式存储</title>
+      <link>https://hwk42.github.io/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8/</link>
+      <pubDate>Wed, 15 Sep 2021 12:14:47 +0800</pubDate>
+      
+      <guid>https://hwk42.github.io/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>K8s</title>
+      <link>https://hwk42.github.io/tags/k8s/</link>
+      <pubDate>Tue, 13 Apr 2021 11:07:27 +0800</pubDate>
+      
+      <guid>https://hwk42.github.io/tags/k8s/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>存储</title>
+      <link>https://hwk42.github.io/tags/%E5%AD%98%E5%82%A8/</link>
+      <pubDate>Tue, 13 Apr 2021 11:07:27 +0800</pubDate>
+      
+      <guid>https://hwk42.github.io/tags/%E5%AD%98%E5%82%A8/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Presto</title>
+      <link>https://hwk42.github.io/tags/presto/</link>
+      <pubDate>Fri, 09 Apr 2021 17:50:07 +0800</pubDate>
+      
+      <guid>https://hwk42.github.io/tags/presto/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Trino</title>
+      <link>https://hwk42.github.io/tags/trino/</link>
+      <pubDate>Fri, 09 Apr 2021 17:50:07 +0800</pubDate>
+      
+      <guid>https://hwk42.github.io/tags/trino/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>分布式计算</title>
+      <link>https://hwk42.github.io/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97/</link>
+      <pubDate>Fri, 09 Apr 2021 17:50:07 +0800</pubDate>
+      
+      <guid>https://hwk42.github.io/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>大数据</title>
+      <link>https://hwk42.github.io/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/</link>
+      <pubDate>Fri, 09 Apr 2021 17:50:07 +0800</pubDate>
+      
+      <guid>https://hwk42.github.io/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Ingress</title>
+      <link>https://hwk42.github.io/tags/ingress/</link>
+      <pubDate>Wed, 14 Oct 2020 14:38:28 +0800</pubDate>
+      
+      <guid>https://hwk42.github.io/tags/ingress/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Kubernetes</title>
+      <link>https://hwk42.github.io/tags/kubernetes/</link>
+      <pubDate>Wed, 14 Oct 2020 14:38:28 +0800</pubDate>
+      
+      <guid>https://hwk42.github.io/tags/kubernetes/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Traefik</title>
+      <link>https://hwk42.github.io/tags/traefik/</link>
+      <pubDate>Wed, 14 Oct 2020 14:38:28 +0800</pubDate>
+      
+      <guid>https://hwk42.github.io/tags/traefik/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Docker</title>
+      <link>https://hwk42.github.io/tags/docker/</link>
+      <pubDate>Thu, 19 Mar 2020 23:45:31 +0800</pubDate>
+      
+      <guid>https://hwk42.github.io/tags/docker/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>CBIR</title>
+      <link>https://hwk42.github.io/tags/cbir/</link>
+      <pubDate>Thu, 28 Nov 2019 00:56:05 +0800</pubDate>
+      
+      <guid>https://hwk42.github.io/tags/cbir/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>相似性搜索</title>
+      <link>https://hwk42.github.io/tags/%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%90%9C%E7%B4%A2/</link>
+      <pubDate>Thu, 28 Nov 2019 00:56:05 +0800</pubDate>
+      
+      <guid>https://hwk42.github.io/tags/%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%90%9C%E7%B4%A2/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Tutorial</title>
+      <link>https://hwk42.github.io/tags/tutorial/</link>
+      <pubDate>Tue, 15 Oct 2019 00:29:39 +0800</pubDate>
+      
+      <guid>https://hwk42.github.io/tags/tutorial/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>工具</title>
+      <link>https://hwk42.github.io/tags/%E5%B7%A5%E5%85%B7/</link>
+      <pubDate>Tue, 15 Oct 2019 00:29:39 +0800</pubDate>
+      
+      <guid>https://hwk42.github.io/tags/%E5%B7%A5%E5%85%B7/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

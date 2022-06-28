@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Ingress on Walker的博客</title>
+    <link>https://hwk42.github.io/tags/ingress/</link>
+    <description>Recent content in Ingress on Walker的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Walker - All rights reserved</copyright>
+    <lastBuildDate>Wed, 14 Oct 2020 14:38:28 +0800</lastBuildDate><atom:link href="https://hwk42.github.io/tags/ingress/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>K8s网关Traefik实践</title>
+      <link>https://hwk42.github.io/blog/cloudnative/k8s%E7%BD%91%E5%85%B3traefik%E5%AE%9E%E8%B7%B5/</link>
+      <pubDate>Wed, 14 Oct 2020 14:38:28 +0800</pubDate>
+      
+      <guid>https://hwk42.github.io/blog/cloudnative/k8s%E7%BD%91%E5%85%B3traefik%E5%AE%9E%E8%B7%B5/</guid>
+      <description>问题背景 随着K8s的日益成熟，云原生的概念和重要性日渐渗透到各种领域。最近组内决定引入K8s作为系统基础底座，用来管理调度、配置、运维和新组件集成等。网关方面，如果是从零开始的项目就比较简单，引入Ingress便可满足；由于已使用Nginx，在不能对项目有影响的情况下需要进行兼容，架构方面会复杂些。</description>
+    </item>
+    
+  </channel>
+</rss>

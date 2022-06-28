@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>GPU on Walker的博客</title>
+    <link>https://hwk42.github.io/tags/gpu/</link>
+    <description>Recent content in GPU on Walker的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Walker - All rights reserved</copyright>
+    <lastBuildDate>Mon, 29 Nov 2021 19:30:10 +0800</lastBuildDate><atom:link href="https://hwk42.github.io/tags/gpu/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>让机器学习更快些-在K8s中支持GPU调度</title>
+      <link>https://hwk42.github.io/blog/cloudnative/%E8%AE%A9%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%9B%B4%E5%BF%AB%E4%BA%9B--%E5%9C%A8k8s%E4%B8%AD%E6%94%AF%E6%8C%81gpu%E8%B0%83%E5%BA%A6/</link>
+      <pubDate>Mon, 29 Nov 2021 19:30:10 +0800</pubDate>
+      
+      <guid>https://hwk42.github.io/blog/cloudnative/%E8%AE%A9%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%9B%B4%E5%BF%AB%E4%BA%9B--%E5%9C%A8k8s%E4%B8%AD%E6%94%AF%E6%8C%81gpu%E8%B0%83%E5%BA%A6/</guid>
+      <description>机器学习(尤其是深度学习)的训练和推理是计算密集型应用，使用CPU往往达不到性能要求，通常需要特殊的硬件如GPU、FPGA等来加速。最常见、通用的加速硬件是NVIDIA GPU， 这里记录下在K8s环境下如何支持GPU调度。支持GPU有两种方法：手动安装和使用gpu-operator安装</description>
+    </item>
+    
+  </channel>
+</rss>

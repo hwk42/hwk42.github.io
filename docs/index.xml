@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Walker的博客</title>
+    <link>https://hwk42.github.io/</link>
+    <description>Recent content on Walker的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Walker - All rights reserved</copyright>
+    <lastBuildDate>Mon, 29 Nov 2021 19:30:10 +0800</lastBuildDate><atom:link href="https://hwk42.github.io/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>让机器学习更快些-在K8s中支持GPU调度</title>
+      <link>https://hwk42.github.io/blog/cloudnative/%E8%AE%A9%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%9B%B4%E5%BF%AB%E4%BA%9B--%E5%9C%A8k8s%E4%B8%AD%E6%94%AF%E6%8C%81gpu%E8%B0%83%E5%BA%A6/</link>
+      <pubDate>Mon, 29 Nov 2021 19:30:10 +0800</pubDate>
+      
+      <guid>https://hwk42.github.io/blog/cloudnative/%E8%AE%A9%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%9B%B4%E5%BF%AB%E4%BA%9B--%E5%9C%A8k8s%E4%B8%AD%E6%94%AF%E6%8C%81gpu%E8%B0%83%E5%BA%A6/</guid>
+      <description>机器学习(尤其是深度学习)的训练和推理是计算密集型应用，使用CPU往往达不到性能要求，通常需要特殊的硬件如GPU、FPGA等来加速。最常见、通用的加速硬件是NVIDIA GPU， 这里记录下在K8s环境下如何支持GPU调度。支持GPU有两种方法：手动安装和使用gpu-operator安装</description>
+    </item>
+    
+    <item>
+      <title>使用Openscoring部署Spark ML Pipeline模型</title>
+      <link>https://hwk42.github.io/blog/machinelearning/%E4%BD%BF%E7%94%A8openscoring%E9%83%A8%E7%BD%B2spark-ml-pipeline%E6%A8%A1%E5%9E%8B/</link>
+      <pubDate>Tue, 09 Nov 2021 16:31:21 +0800</pubDate>
+      
+      <guid>https://hwk42.github.io/blog/machinelearning/%E4%BD%BF%E7%94%A8openscoring%E9%83%A8%E7%BD%B2spark-ml-pipeline%E6%A8%A1%E5%9E%8B/</guid>
+      <description>Spark MLlib在机器学习领域应用虽不如TensorFlow、PyTorch框架受欢迎，不过其也能完成完整的机器学习流水线，而且可以与Spark其他组件无缝集成，与大数据生态互通也更有优势。这篇文章记录下使用Spark ML Pipeline 训练并部署模型过程。测试Spark版本为3.</description>
+    </item>
+    
+    <item>
+      <title>云原生存储-使用NFS动态提供PV</title>
+      <link>https://hwk42.github.io/blog/cloudnative/%E4%BA%91%E5%8E%9F%E7%94%9F%E5%AD%98%E5%82%A8-%E4%BD%BF%E7%94%A8nfs%E5%8A%A8%E6%80%81%E6%8F%90%E4%BE%9Bpv/</link>
+      <pubDate>Wed, 15 Sep 2021 12:14:47 +0800</pubDate>
+      
+      <guid>https://hwk42.github.io/blog/cloudnative/%E4%BA%91%E5%8E%9F%E7%94%9F%E5%AD%98%E5%82%A8-%E4%BD%BF%E7%94%A8nfs%E5%8A%A8%E6%80%81%E6%8F%90%E4%BE%9Bpv/</guid>
+      <description>K8s有两种提供PV的方式：静态和动态。静态供应是指由管理员手动创建，并指定存储类的类型和容器，PVC根据要求进行绑定；动态供应则无需手动创建，在部署provisioner后即可监听PVC事件，自动完成PV创建、绑定、释放等生命周期，对运维和存储利用率提升很友好。K8s内置了多种存储支持动态供应，常用的包括Ceph、NFS等，本文记录下NFS动态供应的搭建过程，并对比两者的优势和不足作为选型参考。</description>
+    </item>
+    
+    <item>
+      <title>边缘AI场景技术选型(调度和存储)</title>
+      <link>https://hwk42.github.io/blog/cloudnative/%E8%BE%B9%E7%BC%98ai%E5%9C%BA%E6%99%AF%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B/</link>
+      <pubDate>Tue, 13 Apr 2021 11:07:27 +0800</pubDate>
+      
+      <guid>https://hwk42.github.io/blog/cloudnative/%E8%BE%B9%E7%BC%98ai%E5%9C%BA%E6%99%AF%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B/</guid>
+      <description>调度 K3s K3s是Rancher公司发布的目前全球用户量最大的CNCF认证轻量级K8S发行版。K3s将Kubernetes和其他组件打包在一个不足60M的二进制文件中，因此部署简单、占用资源少，尤其适用于边缘、嵌入式K8s等场景。与标准版K8s相比，K3s使用sqlite3作为默认存储后端，也支持Etcd3，MySQL和Postgres；同时默认使用containerd容器运行时，docker为可选项。</description>
+    </item>
+    
+    <item>
+      <title>大数据计算之Trino简介</title>
+      <link>https://hwk42.github.io/blog/bigdata/trino%E7%AE%80%E4%BB%8B/</link>
+      <pubDate>Fri, 09 Apr 2021 17:50:07 +0800</pubDate>
+      
+      <guid>https://hwk42.github.io/blog/bigdata/trino%E7%AE%80%E4%BB%8B/</guid>
+      <description>Trino(即以前的Presto SQL)是为分布式数仓和分析设计的高效在线分析处理(OLAP)工具。与HIVE等数仓工具相比，Trino尤其适用于在大量数据中快速返回查询结果。除HDFS，Trino也支持传统的关系型数据库和其他如Cassandra、MongoDB等半结构化数据，且可以同时跨多个不在同一数据中心源查询。</description>
+    </item>
+    
+    <item>
+      <title>K8s网关Traefik实践</title>
+      <link>https://hwk42.github.io/blog/cloudnative/k8s%E7%BD%91%E5%85%B3traefik%E5%AE%9E%E8%B7%B5/</link>
+      <pubDate>Wed, 14 Oct 2020 14:38:28 +0800</pubDate>
+      
+      <guid>https://hwk42.github.io/blog/cloudnative/k8s%E7%BD%91%E5%85%B3traefik%E5%AE%9E%E8%B7%B5/</guid>
+      <description>问题背景 随着K8s的日益成熟，云原生的概念和重要性日渐渗透到各种领域。最近组内决定引入K8s作为系统基础底座，用来管理调度、配置、运维和新组件集成等。网关方面，如果是从零开始的项目就比较简单，引入Ingress便可满足；由于已使用Nginx，在不能对项目有影响的情况下需要进行兼容，架构方面会复杂些。</description>
+    </item>
+    
+    <item>
+      <title>一个例子理解Docker和Kubernetes</title>
+      <link>https://hwk42.github.io/blog/cloudnative/%E4%B8%80%E4%B8%AA%E4%BE%8B%E5%AD%90%E7%90%86%E8%A7%A3docker%E5%92%8Ckubernetes/</link>
+      <pubDate>Thu, 19 Mar 2020 23:45:31 +0800</pubDate>
+      
+      <guid>https://hwk42.github.io/blog/cloudnative/%E4%B8%80%E4%B8%AA%E4%BE%8B%E5%AD%90%E7%90%86%E8%A7%A3docker%E5%92%8Ckubernetes/</guid>
+      <description>docker和k8s早已成为云原生架构的事实标准，在运维、调度、机器学习炼丹等场景均有大范围应用。当下这么大红大紫的技术不了解点皮毛确实说不过去，但对平时只做后台或算法的同学来说其门槛相对还是较高。这里从一个简单的例子，抛开底层技术原理，尽量减少专业术语，以通俗易懂的方式介绍下它们如何能帮助开发和算法工程师更好地玩耍。</description>
+    </item>
+    
+    <item>
+      <title>混合精度训练</title>
+      <link>https://hwk42.github.io/blog/machinelearning/%E6%B7%B7%E5%90%88%E7%B2%BE%E5%BA%A6%E8%AE%AD%E7%BB%83/</link>
+      <pubDate>Wed, 19 Feb 2020 23:42:15 +0800</pubDate>
+      
+      <guid>https://hwk42.github.io/blog/machinelearning/%E6%B7%B7%E5%90%88%E7%B2%BE%E5%BA%A6%E8%AE%AD%E7%BB%83/</guid>
+      <description>混合精度训练可以在不改变网络架构的前提下，通过以半精度格式执行操作来显着提高计算速度，同时以单精度存储最少的信息以在网络的关键部分中保留尽可能多的信息。当前深度学习训练/推理使用的主流数值精度是32bit(即FP32)，随着深度学习商用硬件的发展，16bit(FP16/DFP16)混合精度在训练中的应用逐渐成熟，如Intel的NNP，NVIDIA的 Tensor Core。</description>
+    </item>
+    
+    <item>
+      <title>相似向量搜索：使用Keras实现以图搜图</title>
+      <link>https://hwk42.github.io/blog/machinelearning/%E7%9B%B8%E4%BC%BC%E5%90%91%E9%87%8F%E6%A3%80%E7%B4%A2/</link>
+      <pubDate>Thu, 28 Nov 2019 00:56:05 +0800</pubDate>
+      
+      <guid>https://hwk42.github.io/blog/machinelearning/%E7%9B%B8%E4%BC%BC%E5%90%91%E9%87%8F%E6%A3%80%E7%B4%A2/</guid>
+      <description>工作中需要用到相似图片搜索，用于检测样本平衡度，是否违规等场景。对比训练一个分类模型来说，使用相似搜索的方法解决问题的周期要快不少，且效果也较好，简直图像处理工具的瑞士军刀。本文介绍下相关的理论基础和实现过程。</description>
+    </item>
+    
+    <item>
+      <title>使用Hugo在GitHub Pages搭建个人博客</title>
+      <link>https://hwk42.github.io/blog/tools/%E4%BD%BF%E7%94%A8hugo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/</link>
+      <pubDate>Tue, 15 Oct 2019 00:29:39 +0800</pubDate>
+      
+      <guid>https://hwk42.github.io/blog/tools/%E4%BD%BF%E7%94%A8hugo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/</guid>
+      <description>一直想找个地方记录自己的学习过程，既方便日后回顾，也能通过写博客梳理知识的逻辑。原本打算在CSDN这样的平台上写的，活跃度也高，但被注册过程恶心到了，不止要手机认证，还要关注公众号发验证码。谷歌了一圈，大概有Hexo和Hugo两种方案，前者比较成熟，不过是基于npm的，性能比基于go的hugo要慢，而hugo上手也简单。考虑到GitHub的强大和网站维护性(其实是没钱买服务器)，GitHub Pages成了托管网站的首选。</description>
+    </item>
+    
+  </channel>
+</rss>

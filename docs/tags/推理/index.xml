@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>推理 on Walker的博客</title>
+    <link>https://hwk42.github.io/tags/%E6%8E%A8%E7%90%86/</link>
+    <description>Recent content in 推理 on Walker的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Walker - All rights reserved</copyright>
+    <lastBuildDate>Tue, 09 Nov 2021 16:31:21 +0800</lastBuildDate><atom:link href="https://hwk42.github.io/tags/%E6%8E%A8%E7%90%86/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>使用Openscoring部署Spark ML Pipeline模型</title>
+      <link>https://hwk42.github.io/blog/machinelearning/%E4%BD%BF%E7%94%A8openscoring%E9%83%A8%E7%BD%B2spark-ml-pipeline%E6%A8%A1%E5%9E%8B/</link>
+      <pubDate>Tue, 09 Nov 2021 16:31:21 +0800</pubDate>
+      
+      <guid>https://hwk42.github.io/blog/machinelearning/%E4%BD%BF%E7%94%A8openscoring%E9%83%A8%E7%BD%B2spark-ml-pipeline%E6%A8%A1%E5%9E%8B/</guid>
+      <description>Spark MLlib在机器学习领域应用虽不如TensorFlow、PyTorch框架受欢迎，不过其也能完成完整的机器学习流水线，而且可以与Spark其他组件无缝集成，与大数据生态互通也更有优势。这篇文章记录下使用Spark ML Pipeline 训练并部署模型过程。测试Spark版本为3.</description>
+    </item>
+    
+  </channel>
+</rss>

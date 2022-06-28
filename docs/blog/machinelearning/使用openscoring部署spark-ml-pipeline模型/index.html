@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en-us"><head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="generator" content="Hugo 0.101.0" />
+	
+	<link rel="icon" href="/images/logo.png">
+	
+	<title>使用Openscoring部署Spark ML Pipeline模型 | Walker的博客</title>
+	
+	
+
+	<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://hwk42.github.io/blog/machinelearning/%E4%BD%BF%E7%94%A8openscoring%E9%83%A8%E7%BD%B2spark-ml-pipeline%E6%A8%A1%E5%9E%8B/cover-brittany-nailon-UVuTceEtSpg-unsplash.jpg"/>
+<meta name="twitter:title" content="使用Openscoring部署Spark ML Pipeline模型"/>
+<meta name="twitter:description" content="Spark MLlib在机器学习领域应用虽不如TensorFlow、PyTorch框架受欢迎，不过其也能完成完整的机器学习流水线，而且可以与Spark其他组件无缝集成，与大数据生态互通也更有优势。这篇文章记录下使用Spark ML Pipeline 训练并部署模型过程。测试Spark版本为3."/>
+
+	<meta property="og:title" content="使用Openscoring部署Spark ML Pipeline模型" />
+<meta property="og:description" content="Spark MLlib在机器学习领域应用虽不如TensorFlow、PyTorch框架受欢迎，不过其也能完成完整的机器学习流水线，而且可以与Spark其他组件无缝集成，与大数据生态互通也更有优势。这篇文章记录下使用Spark ML Pipeline 训练并部署模型过程。测试Spark版本为3." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://hwk42.github.io/blog/machinelearning/%E4%BD%BF%E7%94%A8openscoring%E9%83%A8%E7%BD%B2spark-ml-pipeline%E6%A8%A1%E5%9E%8B/" /><meta property="og:image" content="https://hwk42.github.io/blog/machinelearning/%E4%BD%BF%E7%94%A8openscoring%E9%83%A8%E7%BD%B2spark-ml-pipeline%E6%A8%A1%E5%9E%8B/cover-brittany-nailon-UVuTceEtSpg-unsplash.jpg"/><meta property="article:section" content="blog" />
+<meta property="article:published_time" content="2021-11-09T16:31:21+08:00" />
+<meta property="article:modified_time" content="2021-11-09T16:31:21+08:00" />
+
+
+
+	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp"
+	 crossorigin="anonymous">
+	<link href="https://fonts.googleapis.com/css?family=Righteous%7CMerriweather:300,300i,400,400i,700,700i" rel="stylesheet">
+	<link href="/css/medium.css" rel="stylesheet">
+	<link href="/css/additional.css" rel="stylesheet">
+
+	
+	
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top mediumnavigation nav-down">
+    <div class="container pr-0">
+        
+        <a class="navbar-brand" href="https://hwk42.github.io//">
+
+            
+            <img src="/images/logo.png" alt="logo">
+            
+        </a>
+        
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMediumish" aria-controls="navbarSupportedContent"
+            aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        
+        <div class="collapse navbar-collapse" id="navbarMediumish">
+            
+            <ul class="navbar-nav ml-auto">
+                 
+                <li class="nav-item ">
+                    <a class="nav-link" href="/blog">Blog</a>
+                </li>
+                 
+                <li class="nav-item ">
+                    <a class="nav-link" href="/">About Me</a>
+                </li>
+                
+            </ul>
+        </div>
+        
+    </div>
+</nav>
+
+
+        <div class="site-content">   
+            <div class="container">
+<div class="mainheading">
+    <h1 class="sitetitle">Walker的博客</h1>
+    <p class="lead">
+         人生就是不断的起起起起
+    </p>
+</div><div class="main-content">
+        
+        <div class="container">
+            <div class="row">
+                
+                <div class="col-md-2 pl-0"><div class="share sticky-top sticky-top-offset">
+    <p>Share</p>
+    <ul>
+        <li class="ml-1 mr-1">
+        <a target="_blank" href="https://twitter.com/intent/tweet?text=%e4%bd%bf%e7%94%a8Openscoring%e9%83%a8%e7%bd%b2Spark%20ML%20Pipeline%e6%a8%a1%e5%9e%8b&url=https%3a%2f%2fhwk42.github.io%2fblog%2fmachinelearning%2f%25E4%25BD%25BF%25E7%2594%25A8openscoring%25E9%2583%25A8%25E7%25BD%25B2spark-ml-pipeline%25E6%25A8%25A1%25E5%259E%258B%2f" onclick="window.open(this.href, 'twitter-share', 'width=550,height=435');return false;">
+        <i class="fab fa-twitter"></i>
+        </a>
+        </li>
+        
+        <li class="ml-1 mr-1">
+        <a target="_blank" href="https://facebook.com/sharer.php?u=https%3a%2f%2fhwk42.github.io%2fblog%2fmachinelearning%2f%25E4%25BD%25BF%25E7%2594%25A8openscoring%25E9%2583%25A8%25E7%25BD%25B2spark-ml-pipeline%25E6%25A8%25A1%25E5%259E%258B%2f" onclick="window.open(this.href, 'facebook-share', 'width=550,height=435');return false;">
+        <i class="fab fa-facebook-f"></i>
+        </a>
+        </li>
+      
+    </ul>
+
+    
+        <div class="sep">
+        </div>				
+        <ul>
+            <li> 
+            <a  class="small smoothscroll" href="#disqus_thread"></a>
+            </li>
+        </ul>
+    
+</div>
+</div>
+                                
+                <div class="col-md-9 flex-first flex-md-unordered">
+                    <div class="mainheading">
+                        	
+                        
+                        
+                        
+                        <div class="row post-top-meta">
+                            <div class="col-xs-12 col-md-3 col-lg-2 text-center text-md-left mb-4 mb-md-0 md-nopad-right">
+                                <img class="author-thumb" src="/images/cover.png" alt="Walker">
+                            </div>
+                            <div class="col-xs-12 col-md-9 col-lg-10 text-center text-md-left md-nopad-left">
+                                <a target="_blank" class="link-dark">Walker</a><br>
+                                <span class="author-description">
+                                    dedicate to cool things<br>
+                                    <i class="far fa-star"></i>
+                                    Nov 9, 2021
+                                    <i class="far fa-clock clock"></i>
+                                    2 min read
+                                </span>					
+                            </div>
+                        </div>			
+                        	
+                        
+                                                
+                        
+                        <h1 class="posttitle">使用Openscoring部署Spark ML Pipeline模型</h1> 
+                    </div>
+
+                    
+                    
+                    
+                        <img class="featured-image img-fluid" src="https://hwk42.github.io/blog/machinelearning/%E4%BD%BF%E7%94%A8openscoring%E9%83%A8%E7%BD%B2spark-ml-pipeline%E6%A8%A1%E5%9E%8B/cover-brittany-nailon-UVuTceEtSpg-unsplash.jpg" alt="thumbnail for this post">
+                    
+                    
+
+                    
+                    <div class="article-post">
+                        <p>Spark MLlib在机器学习领域应用虽不如TensorFlow、PyTorch框架受欢迎，不过其也能完成完整的机器学习流水线，而且可以与Spark其他组件无缝集成，与大数据生态互通也更有优势。这篇文章记录下使用Spark ML Pipeline 训练并部署模型过程。测试Spark版本为3.0.3</p>
+<h3 id="导入相关的依赖">导入相关的依赖</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ export SPARK_HOME<span style="color:#f92672">=</span>/opt/spark
+</span></span><span style="display:flex;"><span>$ wget https://github.com/jpmml/jpmml-sparkml/releases/download/1.6.6/jpmml-sparkml-executable-1.6.6.jar
+</span></span><span style="display:flex;"><span>$ $SPARK_HOME/bin/pyspark --jars jpmml-sparkml-executable-1.6.6.jar
+</span></span></code></pre></div><p>这里可以手动指定jar路径，如放在$SPARK_HOME/jars目录下则不需要显式指定.</p>
+<p><a href="https://github.com/jpmml/jpmml-sparkml">jpmml-sparkml</a>可以将Spark ML Pipeline模型转换成PMML，使用Java实现，需要安装<a href="https://github.com/jpmml/pyspark2pmml">pyspark2pmml</a>，用于Python与Java的转换和调用</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>pip3 install pyspark2pmml
+</span></span></code></pre></div><h3 id="编译训练模型">编译、训练模型</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#f92672">from</span> pyspark.ml <span style="color:#f92672">import</span> Pipeline
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> pyspark.ml.classification <span style="color:#f92672">import</span> DecisionTreeClassifier
+</span></span><span style="display:flex;"><span><span style="color:#f92672">from</span> pyspark.ml.feature <span style="color:#f92672">import</span> RFormula, SQLTransformer
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>df <span style="color:#f92672">=</span> spark<span style="color:#f92672">.</span>read<span style="color:#f92672">.</span>option(<span style="color:#e6db74">&#34;delimiter&#34;</span>, <span style="color:#e6db74">&#34;;&#34;</span>)<span style="color:#f92672">.</span>csv(<span style="color:#e6db74">&#34;winequality-red.csv&#34;</span>, header <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>, inferSchema <span style="color:#f92672">=</span> <span style="color:#66d9ef">True</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>statement <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;&#34;&#34;
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  SELECT *,
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  (`free sulfur dioxide` / `total sulfur dioxide`) AS `ratio of free sulfur dioxide`
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">  FROM __THIS__
+</span></span></span><span style="display:flex;"><span><span style="color:#e6db74">&#34;&#34;&#34;</span>
+</span></span><span style="display:flex;"><span>sqlTransformer <span style="color:#f92672">=</span> SQLTransformer(statement <span style="color:#f92672">=</span> statement)
+</span></span><span style="display:flex;"><span>formula <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;quality ~ .&#34;</span>
+</span></span><span style="display:flex;"><span>rFormula <span style="color:#f92672">=</span> RFormula(formula <span style="color:#f92672">=</span> formula)
+</span></span><span style="display:flex;"><span>classifier <span style="color:#f92672">=</span> DecisionTreeClassifier(minInstancesPerNode <span style="color:#f92672">=</span> <span style="color:#ae81ff">20</span>)
+</span></span><span style="display:flex;"><span>pipeline <span style="color:#f92672">=</span> Pipeline(stages <span style="color:#f92672">=</span> [sqlTransformer, rFormula, classifier])
+</span></span><span style="display:flex;"><span>pipelineModel <span style="color:#f92672">=</span> pipeline<span style="color:#f92672">.</span>fit(df)
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#f92672">from</span> pyspark2pmml <span style="color:#f92672">import</span> PMMLBuilder
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>PMMLBuilder(sc, df, pipelineModel)<span style="color:#f92672">.</span>buildFile(<span style="color:#e6db74">&#34;RedWineQuality.pmml&#34;</span>)
+</span></span></code></pre></div><p><code>PMMLBuilder</code>Python类是模型转换的核心，主要包装了<code>org.jpmml.sparkml.PMMLBuilder</code> Java类，继承了其大部分公共不变的API方法。也可为其添加参数：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#f92672">from</span> pyspark2pmml <span style="color:#f92672">import</span> PMMLBuilder
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>PMMLBuilder(sc, df, pipelineModel)\
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">.</span>putOption(classifier, <span style="color:#e6db74">&#34;compact&#34;</span>, <span style="color:#66d9ef">False</span>)\
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">.</span>putOption(classifier, <span style="color:#e6db74">&#34;keep_predictionCol&#34;</span>, <span style="color:#66d9ef">False</span>)\
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">.</span>verify(df<span style="color:#f92672">.</span>sample(<span style="color:#66d9ef">False</span>, <span style="color:#ae81ff">0.005</span>)<span style="color:#f92672">.</span>limit(<span style="color:#ae81ff">5</span>))\
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">.</span>buildFile(<span style="color:#e6db74">&#34;RedWineQuality.pmml&#34;</span>)
+</span></span></code></pre></div><p>与其他机器学习框架持久化或序列化数据格式不同，PMML数据格式基于文本并设计为人类可读，类似XML格式。可以在文本编辑器中打开生成的PMML文件，并根据原始特征空间遵循学习的决策树模型的拆分逻辑。PMML(Predictive Model Markup Language)，即预测模型标记语言，可以让模型部署实现跨平台、跨语言，这也是PMML区别于其他模型部署方法最大的优点。比如使用Python建模，导出PMML后便于研发在Java生产环境中部署。</p>
+<h3 id="部署测试模型">部署、测试模型</h3>
+<p>最简便方法是通过Openscoring可执行文件来部署。<a href="https://github.com/openscoring/openscoring">Openscoring</a>可以将PMML模型部署为REST Web服务。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ wget https://github.com/openscoring/openscoring/releases/download/2.0.5/openscoring-server-executable-2.0.5.jar
+</span></span><span style="display:flex;"><span>$ java -jar openscoring-server-executable-2.0.5.jar
+</span></span></code></pre></div><p>这里默认监听8080端口并使用<code>http://localhost:8080/openscoring/model</code>作为基本的URL路径。默认的用户授权逻辑由<code>org.openscoring.service.filters.NetworkSecurityContextFilterJAX-RS</code>过滤器类实现，它将“用户”角色（只读）授予任何地址，将“管理员”角色（读取和写入）授予本地主机地址。
+根据实际的Spark环境选择不同版本的jar，如使用2.0.1版本报了以下错：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>Caused by: java.lang.IllegalArgumentException: PMML namespace URI http://www.dmg.org/PMML-4_4 is not supported
+</span></span><span style="display:flex;"><span>        at org.dmg.pmml.Version.forNamespaceURI<span style="color:#f92672">(</span>Version.java:69<span style="color:#f92672">)</span>
+</span></span><span style="display:flex;"><span>        at org.jpmml.model.filters.PMMLFilter.updateSource<span style="color:#f92672">(</span>PMMLFilter.java:121<span style="color:#f92672">)</span>
+</span></span></code></pre></div><p>部署好模型可使用<code>openscoring</code>库来测试</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>pip3 install openscoring
+</span></span></code></pre></div><p>openscoring.Openscoring类包含公共信息，如REST API基本URL，凭证等。</p>
+<p>基本URL是在所有端点之间共享的 URL 的这一部分。它通常遵循模式<code>http://&lt;server&gt;:&lt;port&gt;/&lt;context path&gt;</code>。Openscoring独立服务器使用非空上下文路径openscoring来消除歧义，默认的基本URL是<code>http://localhost:8080/openscoring</code>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#f92672">from</span> openscoring <span style="color:#f92672">import</span> Openscoring
+</span></span><span style="display:flex;"><span>os <span style="color:#f92672">=</span> Openscoring(<span style="color:#e6db74">&#34;http://localhost:8080/openscoring&#34;</span>)
+</span></span></code></pre></div><p>单个 Openscoring 应用程序实例可以托管多个模型。通过将斜杠及其字母数字标识符附加到模型 REST API 端点的URL，在 REST API中直接寻址各个模型。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#75715e"># Shall be available at http://localhost:8080/openscoring/model/RedWineQuality</span>
+</span></span><span style="display:flex;"><span>os<span style="color:#f92672">.</span>deployFile(<span style="color:#e6db74">&#34;RedWineQuality&#34;</span>, <span style="color:#e6db74">&#34;RedWineQuality.pmml&#34;</span>)
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># Shall be available at http://localhost:8080/openscoring/model/WhiteWineQuality</span>
+</span></span><span style="display:flex;"><span>os<span style="color:#f92672">.</span>deployFile(<span style="color:#e6db74">&#34;WhiteWineQuality&#34;</span>, <span style="color:#e6db74">&#34;WhiteWineQuality.pmml&#34;</span>)
+</span></span></code></pre></div><p>可以在浏览器中打开模型URL并检查响应对象的模型架构描述部分（所有输入、目标和输出字段的名称、数据类型和值空间）。例如，“RedWineQuality”的模型架构列出了七个输入字段、一个目标字段和八个输出字段。因此，该模型不关心winequality-red.csv数据集中存在的四个输入字段（即“固定酸度”、“柠檬酸”、“氯化物”和“密度”列）。在提出评估请求时，可以安全地省略这些输入字段的映射：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span>dictRequest <span style="color:#f92672">=</span> {
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">#&#34;fixed acidity&#34; : 7.4,</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;volatile acidity&#34;</span> : <span style="color:#ae81ff">0.7</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">#&#34;citric acid&#34; : 0,</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;residual sugar&#34;</span> : <span style="color:#ae81ff">1.9</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">#&#34;chlorides&#34; : 0.076,</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;free sulfur dioxide&#34;</span> : <span style="color:#ae81ff">11</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;total sulfur dioxide&#34;</span> : <span style="color:#ae81ff">34</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#75715e">#&#34;density&#34; : 0.9978,</span>
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;pH&#34;</span> : <span style="color:#ae81ff">3.51</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;sulphates&#34;</span> : <span style="color:#ae81ff">0.56</span>,
+</span></span><span style="display:flex;"><span>  <span style="color:#e6db74">&#34;alcohol&#34;</span> : <span style="color:#ae81ff">9.4</span>,
+</span></span><span style="display:flex;"><span>}
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>dictResponse <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>evaluate(<span style="color:#e6db74">&#34;RedWineQuality&#34;</span>, dictRequest)
+</span></span><span style="display:flex;"><span>print(dictResponse)
+</span></span></code></pre></div><p>测试结果返回如下：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{<span style="color:#960050;background-color:#1e0010">&#39;quality&#39;:</span> <span style="color:#960050;background-color:#1e0010">5,</span> <span style="color:#960050;background-color:#1e0010">&#39;prediction&#39;:</span> <span style="color:#960050;background-color:#1e0010">5.0,</span> <span style="color:#960050;background-color:#1e0010">&#39;probability(0)&#39;:</span> <span style="color:#960050;background-color:#1e0010">0.0,</span> <span style="color:#960050;background-color:#1e0010">&#39;probability(1)&#39;:</span> <span style="color:#960050;background-color:#1e0010">0.0,</span> <span style="color:#960050;background-color:#1e0010">&#39;probability(2)&#39;:</span> <span style="color:#960050;background-color:#1e0010">0.0,</span> <span style="color:#960050;background-color:#1e0010">&#39;probability(3)&#39;:</span> <span style="color:#960050;background-color:#1e0010">0.00819672131147541,</span> <span style="color:#960050;background-color:#1e0010">&#39;probability(4)&#39;:</span> <span style="color:#960050;background-color:#1e0010">0.05737704918032787,</span> <span style="color:#960050;background-color:#1e0010">&#39;probability(5)&#39;:</span> <span style="color:#960050;background-color:#1e0010">0.7909836065573771,</span> <span style="color:#960050;background-color:#1e0010">&#39;probability(6)&#39;:</span> <span style="color:#960050;background-color:#1e0010">0.13934426229508196,</span> <span style="color:#960050;background-color:#1e0010">&#39;probability(7)&#39;:</span> <span style="color:#960050;background-color:#1e0010">0.004098360655737705,</span> <span style="color:#960050;background-color:#1e0010">&#39;probability(8)&#39;:</span> <span style="color:#960050;background-color:#1e0010">0.0</span>}
+</span></span></code></pre></div><p>在实时性要求高的场景可使用单次预测，Openscoring使用<a href="https://github.com/jpmml/jpmml-evaluator">JPMML-Evaluator</a>库作为其PMML引擎，并且应该能够为任意复杂的PMML模型提供亚毫秒级的周转时间。对于数据是批量的，或受限于网络调用的场景，可使用批预测：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span><span style="color:#f92672">import</span> pandas
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>dfRequest <span style="color:#f92672">=</span> pandas<span style="color:#f92672">.</span>read_csv(<span style="color:#e6db74">&#34;winequality-white.csv&#34;</span>, sep <span style="color:#f92672">=</span> <span style="color:#e6db74">&#34;;&#34;</span>)
+</span></span><span style="display:flex;"><span>dfResponse <span style="color:#f92672">=</span> os<span style="color:#f92672">.</span>evaluateCsv(<span style="color:#e6db74">&#34;WhiteWineQuality&#34;</span>, dfRequest)
+</span></span><span style="display:flex;"><span>print(dfResponse<span style="color:#f92672">.</span>head(<span style="color:#ae81ff">5</span>))
+</span></span></code></pre></div><p>如不需要了可销毁部署，以释放资源</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-py" data-lang="py"><span style="display:flex;"><span>os<span style="color:#f92672">.</span>undeploy(<span style="color:#e6db74">&#34;RedWineQuality&#34;</span>)
+</span></span><span style="display:flex;"><span>os<span style="color:#f92672">.</span>undeploy(<span style="color:#e6db74">&#34;WhiteWineQuality&#34;</span>)
+</span></span></code></pre></div><h3 id="reference">Reference</h3>
+<ul>
+<li><a href="https://openscoring.io/blog/2020/02/16/deploying_sparkml_pipeline_openscoring_rest">Deploying Apache Spark ML pipeline models on Openscoring REST web service</a></li>
+<li><a href="https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-red.csv">红葡萄酒数据集</a>、<a href="https://archive.ics.uci.edu/ml/machine-learning-databases/wine-quality/winequality-white.csv">白葡萄酒</a></li>
+</ul>
+
+                    </div>
+                    
+                    
+                    <div class="after-post-tags">
+                        <ul class="tags">
+                        
+                        <li>
+                        <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0">机器学习</a>
+                        </li>
+                        
+                        <li>
+                        <a href="/tags/spark">Spark</a>
+                        </li>
+                        
+                        <li>
+                        <a href="/tags/%E6%8E%A8%E7%90%86">推理</a>
+                        </li>
+                        
+                        </ul>
+                    </div>
+                    
+                    
+                    
+                    <div class="row PageNavigation d-flex justify-content-between font-weight-bold">
+                    
+                        <a class="d-block col-md-6" href="https://hwk42.github.io/blog/cloudnative/%E8%AE%A9%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%9B%B4%E5%BF%AB%E4%BA%9B--%E5%9C%A8k8s%E4%B8%AD%E6%94%AF%E6%8C%81gpu%E8%B0%83%E5%BA%A6/"> &laquo; 让机器学习更快些-在K8s中支持GPU调度</a>
+                    
+                    
+                        <a class="d-block col-md-6 text-lg-right" href="https://hwk42.github.io/blog/cloudnative/%E4%BA%91%E5%8E%9F%E7%94%9F%E5%AD%98%E5%82%A8-%E4%BD%BF%E7%94%A8nfs%E5%8A%A8%E6%80%81%E6%8F%90%E4%BE%9Bpv/">云原生存储-使用NFS动态提供PV &raquo;</a>
+                    
+                    <div class="clearfix"></div>
+                    </div>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+<div class="container">
+    <div id="comments" class="row justify-content-center mb-5">
+        <div class="col-md-8">              
+                           
+        </div>
+    </div>
+</div>
+
+    </div>
+
+
+            </div>
+<div class="jumbotron fortags">
+	<div class="d-md-flex h-100">
+		<div class="col-md-4 transpdark align-self-center text-center h-100">
+			<div class="d-md-flex align-items-center justify-content-center h-100">
+				<h2 class="d-md-block d-none align-self-center py-1 font-weight-light">Explore <span class="d-none d-md-inline">→</span></h2>
+			</div>
+		</div>
+		<div class="col-md-8 p-5 align-self-center text-center">
+			
+			<a class="mt-1 mb-1" href="/tags/cbir">cbir</a>
+			
+			<a class="mt-1 mb-1" href="/tags/docker">docker</a>
+			
+			<a class="mt-1 mb-1" href="/tags/gpu">gpu</a>
+			
+			<a class="mt-1 mb-1" href="/tags/ingress">ingress</a>
+			
+			<a class="mt-1 mb-1" href="/tags/k8s">k8s</a>
+			
+			<a class="mt-1 mb-1" href="/tags/kubernetes">kubernetes</a>
+			
+			<a class="mt-1 mb-1" href="/tags/nfs">nfs</a>
+			
+			<a class="mt-1 mb-1" href="/tags/presto">presto</a>
+			
+			<a class="mt-1 mb-1" href="/tags/spark">spark</a>
+			
+			<a class="mt-1 mb-1" href="/tags/traefik">traefik</a>
+			
+			<a class="mt-1 mb-1" href="/tags/trino">trino</a>
+			
+			<a class="mt-1 mb-1" href="/tags/tutorial">tutorial</a>
+			
+			<a class="mt-1 mb-1" href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F">云原生</a>
+			
+			<a class="mt-1 mb-1" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8">分布式存储</a>
+			
+			<a class="mt-1 mb-1" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97">分布式计算</a>
+			
+			<a class="mt-1 mb-1" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE">大数据</a>
+			
+			<a class="mt-1 mb-1" href="/tags/%E5%AD%98%E5%82%A8">存储</a>
+			
+			<a class="mt-1 mb-1" href="/tags/%E5%B7%A5%E5%85%B7">工具</a>
+			
+			<a class="mt-1 mb-1" href="/tags/%E6%8E%A8%E7%90%86">推理</a>
+			
+			<a class="mt-1 mb-1" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0">机器学习</a>
+			
+			<a class="mt-1 mb-1" href="/tags/%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%90%9C%E7%B4%A2">相似性搜索</a>
+			
+		</div>
+	</div>
+</div>
+
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-sm-6 text-center text-lg-left">
+                &copy; Copyright Walker - All rights reserved
+            </div>
+            <div class="col-md-6 col-sm-6 text-center text-lg-right">    
+                <a target="_blank" rel="noopener" href="https://www.wowthemes.net">Mediumish Theme</a> by WowThemes.net
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+        </div>
+
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+<script src="/js/mediumish.js"></script>
+
+    </body>
+</html>

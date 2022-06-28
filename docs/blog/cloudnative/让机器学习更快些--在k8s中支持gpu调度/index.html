@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en-us"><head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="generator" content="Hugo 0.101.0" />
+	
+	<link rel="icon" href="/images/logo.png">
+	
+	<title>让机器学习更快些-在K8s中支持GPU调度 | Walker的博客</title>
+	
+	
+
+	<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://hwk42.github.io/blog/cloudnative/%E8%AE%A9%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%9B%B4%E5%BF%AB%E4%BA%9B--%E5%9C%A8k8s%E4%B8%AD%E6%94%AF%E6%8C%81gpu%E8%B0%83%E5%BA%A6/cover-toa-heftiba-FV3GConVSss-unsplash.jpg"/>
+<meta name="twitter:title" content="让机器学习更快些-在K8s中支持GPU调度"/>
+<meta name="twitter:description" content="机器学习(尤其是深度学习)的训练和推理是计算密集型应用，使用CPU往往达不到性能要求，通常需要特殊的硬件如GPU、FPGA等来加速。最常见、通用的加速硬件是NVIDIA GPU， 这里记录下在K8s环境下如何支持GPU调度。支持GPU有两种方法：手动安装和使用gpu-operator安装"/>
+
+	<meta property="og:title" content="让机器学习更快些-在K8s中支持GPU调度" />
+<meta property="og:description" content="机器学习(尤其是深度学习)的训练和推理是计算密集型应用，使用CPU往往达不到性能要求，通常需要特殊的硬件如GPU、FPGA等来加速。最常见、通用的加速硬件是NVIDIA GPU， 这里记录下在K8s环境下如何支持GPU调度。支持GPU有两种方法：手动安装和使用gpu-operator安装" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://hwk42.github.io/blog/cloudnative/%E8%AE%A9%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%9B%B4%E5%BF%AB%E4%BA%9B--%E5%9C%A8k8s%E4%B8%AD%E6%94%AF%E6%8C%81gpu%E8%B0%83%E5%BA%A6/" /><meta property="og:image" content="https://hwk42.github.io/blog/cloudnative/%E8%AE%A9%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%9B%B4%E5%BF%AB%E4%BA%9B--%E5%9C%A8k8s%E4%B8%AD%E6%94%AF%E6%8C%81gpu%E8%B0%83%E5%BA%A6/cover-toa-heftiba-FV3GConVSss-unsplash.jpg"/><meta property="article:section" content="blog" />
+<meta property="article:published_time" content="2021-11-29T19:30:10+08:00" />
+<meta property="article:modified_time" content="2021-11-29T19:30:10+08:00" />
+
+
+
+	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp"
+	 crossorigin="anonymous">
+	<link href="https://fonts.googleapis.com/css?family=Righteous%7CMerriweather:300,300i,400,400i,700,700i" rel="stylesheet">
+	<link href="/css/medium.css" rel="stylesheet">
+	<link href="/css/additional.css" rel="stylesheet">
+
+	
+	
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top mediumnavigation nav-down">
+    <div class="container pr-0">
+        
+        <a class="navbar-brand" href="https://hwk42.github.io//">
+
+            
+            <img src="/images/logo.png" alt="logo">
+            
+        </a>
+        
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMediumish" aria-controls="navbarSupportedContent"
+            aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        
+        <div class="collapse navbar-collapse" id="navbarMediumish">
+            
+            <ul class="navbar-nav ml-auto">
+                 
+                <li class="nav-item ">
+                    <a class="nav-link" href="/blog">Blog</a>
+                </li>
+                 
+                <li class="nav-item ">
+                    <a class="nav-link" href="/">About Me</a>
+                </li>
+                
+            </ul>
+        </div>
+        
+    </div>
+</nav>
+
+
+        <div class="site-content">   
+            <div class="container">
+<div class="mainheading">
+    <h1 class="sitetitle">Walker的博客</h1>
+    <p class="lead">
+         人生就是不断的起起起起
+    </p>
+</div><div class="main-content">
+        
+        <div class="container">
+            <div class="row">
+                
+                <div class="col-md-2 pl-0"><div class="share sticky-top sticky-top-offset">
+    <p>Share</p>
+    <ul>
+        <li class="ml-1 mr-1">
+        <a target="_blank" href="https://twitter.com/intent/tweet?text=%e8%ae%a9%e6%9c%ba%e5%99%a8%e5%ad%a6%e4%b9%a0%e6%9b%b4%e5%bf%ab%e4%ba%9b-%e5%9c%a8K8s%e4%b8%ad%e6%94%af%e6%8c%81GPU%e8%b0%83%e5%ba%a6&url=https%3a%2f%2fhwk42.github.io%2fblog%2fcloudnative%2f%25E8%25AE%25A9%25E6%259C%25BA%25E5%2599%25A8%25E5%25AD%25A6%25E4%25B9%25A0%25E6%259B%25B4%25E5%25BF%25AB%25E4%25BA%259B--%25E5%259C%25A8k8s%25E4%25B8%25AD%25E6%2594%25AF%25E6%258C%2581gpu%25E8%25B0%2583%25E5%25BA%25A6%2f" onclick="window.open(this.href, 'twitter-share', 'width=550,height=435');return false;">
+        <i class="fab fa-twitter"></i>
+        </a>
+        </li>
+        
+        <li class="ml-1 mr-1">
+        <a target="_blank" href="https://facebook.com/sharer.php?u=https%3a%2f%2fhwk42.github.io%2fblog%2fcloudnative%2f%25E8%25AE%25A9%25E6%259C%25BA%25E5%2599%25A8%25E5%25AD%25A6%25E4%25B9%25A0%25E6%259B%25B4%25E5%25BF%25AB%25E4%25BA%259B--%25E5%259C%25A8k8s%25E4%25B8%25AD%25E6%2594%25AF%25E6%258C%2581gpu%25E8%25B0%2583%25E5%25BA%25A6%2f" onclick="window.open(this.href, 'facebook-share', 'width=550,height=435');return false;">
+        <i class="fab fa-facebook-f"></i>
+        </a>
+        </li>
+      
+    </ul>
+
+    
+        <div class="sep">
+        </div>				
+        <ul>
+            <li> 
+            <a  class="small smoothscroll" href="#disqus_thread"></a>
+            </li>
+        </ul>
+    
+</div>
+</div>
+                                
+                <div class="col-md-9 flex-first flex-md-unordered">
+                    <div class="mainheading">
+                        	
+                        
+                        
+                        
+                        <div class="row post-top-meta">
+                            <div class="col-xs-12 col-md-3 col-lg-2 text-center text-md-left mb-4 mb-md-0 md-nopad-right">
+                                <img class="author-thumb" src="/images/cover.png" alt="Walker">
+                            </div>
+                            <div class="col-xs-12 col-md-9 col-lg-10 text-center text-md-left md-nopad-left">
+                                <a target="_blank" class="link-dark">Walker</a><br>
+                                <span class="author-description">
+                                    dedicate to cool things<br>
+                                    <i class="far fa-star"></i>
+                                    Nov 29, 2021
+                                    <i class="far fa-clock clock"></i>
+                                    2 min read
+                                </span>					
+                            </div>
+                        </div>			
+                        	
+                        
+                                                
+                        
+                        <h1 class="posttitle">让机器学习更快些-在K8s中支持GPU调度</h1> 
+                    </div>
+
+                    
+                    
+                    
+                        <img class="featured-image img-fluid" src="https://hwk42.github.io/blog/cloudnative/%E8%AE%A9%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0%E6%9B%B4%E5%BF%AB%E4%BA%9B--%E5%9C%A8k8s%E4%B8%AD%E6%94%AF%E6%8C%81gpu%E8%B0%83%E5%BA%A6/cover-toa-heftiba-FV3GConVSss-unsplash.jpg" alt="thumbnail for this post">
+                    
+                    
+
+                    
+                    <div class="article-post">
+                        <p>机器学习(尤其是深度学习)的训练和推理是计算密集型应用，使用CPU往往达不到性能要求，通常需要特殊的硬件如GPU、FPGA等来加速。最常见、通用的加速硬件是NVIDIA GPU，
+这里记录下在K8s环境下如何支持GPU调度。支持GPU有两种方法：手动安装和使用<a href="https://github.com/NVIDIA/gpu-operator">gpu-operator</a>安装</p>
+<p>手动安装workflow：</p>
+<ul>
+<li>GPU Driver</li>
+<li>nvidia-docker2</li>
+<li>调度插件k8s-device-plugin</li>
+</ul>
+<h3 id="安装驱动">安装驱动</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>distribution<span style="color:#f92672">=</span>rhel7
+</span></span><span style="display:flex;"><span>ARCH<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span> /bin/arch <span style="color:#66d9ef">)</span>
+</span></span><span style="display:flex;"><span>yum-config-manager --add-repo http://developer.download.nvidia.com/compute/cuda/repos/$distribution/<span style="color:#e6db74">${</span>ARCH<span style="color:#e6db74">}</span>/cuda-$distribution.repo
+</span></span><span style="display:flex;"><span>yum install -y nvidia-driver-latest-dkms
+</span></span></code></pre></div><h3 id="安装-nvidia-container-toolkitnvidia-docker2">安装 NVIDIA Container Toolkit（nvidia-docker2）</h3>
+<p>前置要求：</p>
+<ul>
+<li>GNU/Linux x86_64 with kernel version &gt; 3.10</li>
+<li>Docker &gt;= 19.03 (recommended, The minimum supported version is 1.12)</li>
+<li>NVIDIA GPU with Architecture &gt;= Kepler (or compute capability 3.0)</li>
+<li>NVIDIA Linux drivers &gt;= 418.81.07</li>
+</ul>
+<p>安装docker(如有则跳过)</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>curl https://get.docker.com | sh <span style="color:#f92672">&amp;&amp;</span> sudo systemctl --now enable docker
+</span></span></code></pre></div><p>安装nvidia-docker2</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>distribution<span style="color:#f92672">=</span><span style="color:#66d9ef">$(</span>. /etc/os-release;echo $ID$VERSION_ID<span style="color:#66d9ef">)</span>  <span style="color:#f92672">&amp;&amp;</span> curl -s -L https://nvidia.github.io/nvidia-docker/$distribution/nvidia-docker.repo | sudo tee /etc/yum.repos.d/nvidia-docker.repo
+</span></span><span style="display:flex;"><span>yum install -y nvidia-docker2
+</span></span></code></pre></div><p>设置为默认的运行时</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>vim /etc/docker/daemon.json
+</span></span></code></pre></div><div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;default-runtime&#34;</span>: <span style="color:#e6db74">&#34;nvidia&#34;</span>,
+</span></span><span style="display:flex;"><span>    <span style="color:#f92672">&#34;runtimes&#34;</span>: {
+</span></span><span style="display:flex;"><span>        <span style="color:#f92672">&#34;nvidia&#34;</span>: {
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;path&#34;</span>: <span style="color:#e6db74">&#34;nvidia-container-runtime&#34;</span>,
+</span></span><span style="display:flex;"><span>            <span style="color:#f92672">&#34;runtimeArgs&#34;</span>: []
+</span></span><span style="display:flex;"><span>        }
+</span></span><span style="display:flex;"><span>    }
+</span></span><span style="display:flex;"><span>}
+</span></span></code></pre></div><h3 id="重启系统">重启系统</h3>
+<p>安装完驱动需要重启机器才能生效</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>reboot now
+</span></span></code></pre></div><h3 id="测试安装是否成功">测试安装是否成功</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>$ nvidia-smi 
+</span></span><span style="display:flex;"><span>Mon Nov <span style="color:#ae81ff">29</span> 11:09:04 <span style="color:#ae81ff">2021</span>       
+</span></span><span style="display:flex;"><span>+-----------------------------------------------------------------------------+
+</span></span><span style="display:flex;"><span>| NVIDIA-SMI 495.29.05    Driver Version: 495.29.05    CUDA Version: 11.5     |
+</span></span><span style="display:flex;"><span>|-------------------------------+----------------------+----------------------+
+</span></span><span style="display:flex;"><span>| GPU  Name        Persistence-M| Bus-Id        Disp.A | Volatile Uncorr. ECC |
+</span></span><span style="display:flex;"><span>| Fan  Temp  Perf  Pwr:Usage/Cap|         Memory-Usage | GPU-Util  Compute M. |
+</span></span><span style="display:flex;"><span>|                               |                      |               MIG M. |
+</span></span><span style="display:flex;"><span>|<span style="color:#f92672">===============================</span>+<span style="color:#f92672">======================</span>+<span style="color:#f92672">======================</span>|
+</span></span><span style="display:flex;"><span>|   <span style="color:#ae81ff">0</span>  Tesla T4            On   | 00000000:00:09.0 Off |                  Off |
+</span></span><span style="display:flex;"><span>| N/A   36C    P8     9W /  70W |      0MiB / 16127MiB |      0%      Default |
+</span></span><span style="display:flex;"><span>|                               |                      |                  N/A |
+</span></span><span style="display:flex;"><span>+-------------------------------+----------------------+----------------------+
+</span></span><span style="display:flex;"><span>                                                                               
+</span></span><span style="display:flex;"><span>+-----------------------------------------------------------------------------+
+</span></span><span style="display:flex;"><span>| Processes:                                                                  |
+</span></span><span style="display:flex;"><span>|  GPU   GI   CI        PID   Type   Process name                  GPU Memory |
+</span></span><span style="display:flex;"><span>|        ID   ID                                                   Usage      |
+</span></span><span style="display:flex;"><span>|<span style="color:#f92672">=============================================================================</span>|
+</span></span><span style="display:flex;"><span>|  No running processes found                                                 |
+</span></span><span style="display:flex;"><span>+-----------------------------------------------------------------------------+
+</span></span></code></pre></div><h3 id="安装调度插件-nvidia-device-pluginhttpsgithubcomnvidiak8s-device-plugin">安装调度插件 <a href="https://github.com/NVIDIA/k8s-device-plugin">nvidia device plugin</a></h3>
+<p>该插件是NVIDIA官方实现的<a href="https://github.com/kubernetes/community/blob/master/contributors/design-proposals/resource-management/device-plugin.md">Kubernetes device plugin</a>，本质为一个<code>Daemonset</code>资源，可以自动发现每个节点上的GPU设备并调度POD;不过官方的实现只能调度<strong>整数</strong>个数的GPU卡，对利用率不高的场景，如推理、模型开发阶段，需要考虑GPU共享或虚拟化，以此节省成本。目前各大厂商均有一些开源的实现方案，如阿里的gpu-share、腾讯的vgpu等，这里不展开。</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>kubectl create -f https://raw.githubusercontent.com/NVIDIA/k8s-device-plugin/v0.10.0/nvidia-device-plugin.yml
+</span></span></code></pre></div><hr>
+<p>上面来看，手动安装的过程还是有点繁琐，在节点较多或扩容时，每个节点重复操作很不方便。operator方式则是为了解决这个问题，也是NVIDIA官方实现的项目，使用CRD的方式来简化NVIDIA设备的管理和运维工作。
+<img src="gpu-operator.jpeg" alt="">
+不过，参考官网提供的教程未能成功安装，nvidia-driver-daemonset启动失败：</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-shell" data-lang="shell"><span style="display:flex;"><span>Starting installation of NVIDIA driver version 470.57.02 <span style="color:#66d9ef">for</span> Linux kernel version 3.10.0-1062.18.1.el7.x86_64
+</span></span><span style="display:flex;"><span>Stopping NVIDIA persistence daemon...
+</span></span><span style="display:flex;"><span>Unloading NVIDIA driver kernel modules...
+</span></span><span style="display:flex;"><span>Unmounting NVIDIA driver rootfs...
+</span></span><span style="display:flex;"><span>Checking NVIDIA driver packages...
+</span></span><span style="display:flex;"><span>Updating the package cache...
+</span></span><span style="display:flex;"><span>Resolving Linux kernel version...
+</span></span><span style="display:flex;"><span>Could not resolve Linux kernel version
+</span></span><span style="display:flex;"><span>Stopping NVIDIA persistence daemon...
+</span></span><span style="display:flex;"><span>Unloading NVIDIA driver kernel modules...
+</span></span><span style="display:flex;"><span>Unmounting NVIDIA driver rootfs...
+</span></span></code></pre></div><p>GitHub上也有相关的<a href="https://github.com/NVIDIA/gpu-operator/issues/155">讨论</a>，可能目前(2021.12.1)部署还不太稳定，后面有时间再看。</p>
+
+                    </div>
+                    
+                    
+                    <div class="after-post-tags">
+                        <ul class="tags">
+                        
+                        <li>
+                        <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0">机器学习</a>
+                        </li>
+                        
+                        <li>
+                        <a href="/tags/gpu">GPU</a>
+                        </li>
+                        
+                        </ul>
+                    </div>
+                    
+                    
+                    
+                    <div class="row PageNavigation d-flex justify-content-between font-weight-bold">
+                    
+                    
+                        <a class="d-block col-md-6 text-lg-right" href="https://hwk42.github.io/blog/machinelearning/%E4%BD%BF%E7%94%A8openscoring%E9%83%A8%E7%BD%B2spark-ml-pipeline%E6%A8%A1%E5%9E%8B/">使用Openscoring部署Spark ML Pipeline模型 &raquo;</a>
+                    
+                    <div class="clearfix"></div>
+                    </div>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+<div class="container">
+    <div id="comments" class="row justify-content-center mb-5">
+        <div class="col-md-8">              
+                           
+        </div>
+    </div>
+</div>
+
+    </div>
+
+
+            </div>
+<div class="jumbotron fortags">
+	<div class="d-md-flex h-100">
+		<div class="col-md-4 transpdark align-self-center text-center h-100">
+			<div class="d-md-flex align-items-center justify-content-center h-100">
+				<h2 class="d-md-block d-none align-self-center py-1 font-weight-light">Explore <span class="d-none d-md-inline">→</span></h2>
+			</div>
+		</div>
+		<div class="col-md-8 p-5 align-self-center text-center">
+			
+			<a class="mt-1 mb-1" href="/tags/cbir">cbir</a>
+			
+			<a class="mt-1 mb-1" href="/tags/docker">docker</a>
+			
+			<a class="mt-1 mb-1" href="/tags/gpu">gpu</a>
+			
+			<a class="mt-1 mb-1" href="/tags/ingress">ingress</a>
+			
+			<a class="mt-1 mb-1" href="/tags/k8s">k8s</a>
+			
+			<a class="mt-1 mb-1" href="/tags/kubernetes">kubernetes</a>
+			
+			<a class="mt-1 mb-1" href="/tags/nfs">nfs</a>
+			
+			<a class="mt-1 mb-1" href="/tags/presto">presto</a>
+			
+			<a class="mt-1 mb-1" href="/tags/spark">spark</a>
+			
+			<a class="mt-1 mb-1" href="/tags/traefik">traefik</a>
+			
+			<a class="mt-1 mb-1" href="/tags/trino">trino</a>
+			
+			<a class="mt-1 mb-1" href="/tags/tutorial">tutorial</a>
+			
+			<a class="mt-1 mb-1" href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F">云原生</a>
+			
+			<a class="mt-1 mb-1" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8">分布式存储</a>
+			
+			<a class="mt-1 mb-1" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97">分布式计算</a>
+			
+			<a class="mt-1 mb-1" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE">大数据</a>
+			
+			<a class="mt-1 mb-1" href="/tags/%E5%AD%98%E5%82%A8">存储</a>
+			
+			<a class="mt-1 mb-1" href="/tags/%E5%B7%A5%E5%85%B7">工具</a>
+			
+			<a class="mt-1 mb-1" href="/tags/%E6%8E%A8%E7%90%86">推理</a>
+			
+			<a class="mt-1 mb-1" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0">机器学习</a>
+			
+			<a class="mt-1 mb-1" href="/tags/%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%90%9C%E7%B4%A2">相似性搜索</a>
+			
+		</div>
+	</div>
+</div>
+
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-sm-6 text-center text-lg-left">
+                &copy; Copyright Walker - All rights reserved
+            </div>
+            <div class="col-md-6 col-sm-6 text-center text-lg-right">    
+                <a target="_blank" rel="noopener" href="https://www.wowthemes.net">Mediumish Theme</a> by WowThemes.net
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+        </div>
+
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+<script src="/js/mediumish.js"></script>
+
+    </body>
+</html>

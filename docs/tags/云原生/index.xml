@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>云原生 on Walker的博客</title>
+    <link>https://hwk42.github.io/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/</link>
+    <description>Recent content in 云原生 on Walker的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Walker - All rights reserved</copyright>
+    <lastBuildDate>Wed, 15 Sep 2021 12:14:47 +0800</lastBuildDate><atom:link href="https://hwk42.github.io/tags/%E4%BA%91%E5%8E%9F%E7%94%9F/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>云原生存储-使用NFS动态提供PV</title>
+      <link>https://hwk42.github.io/blog/cloudnative/%E4%BA%91%E5%8E%9F%E7%94%9F%E5%AD%98%E5%82%A8-%E4%BD%BF%E7%94%A8nfs%E5%8A%A8%E6%80%81%E6%8F%90%E4%BE%9Bpv/</link>
+      <pubDate>Wed, 15 Sep 2021 12:14:47 +0800</pubDate>
+      
+      <guid>https://hwk42.github.io/blog/cloudnative/%E4%BA%91%E5%8E%9F%E7%94%9F%E5%AD%98%E5%82%A8-%E4%BD%BF%E7%94%A8nfs%E5%8A%A8%E6%80%81%E6%8F%90%E4%BE%9Bpv/</guid>
+      <description>K8s有两种提供PV的方式：静态和动态。静态供应是指由管理员手动创建，并指定存储类的类型和容器，PVC根据要求进行绑定；动态供应则无需手动创建，在部署provisioner后即可监听PVC事件，自动完成PV创建、绑定、释放等生命周期，对运维和存储利用率提升很友好。K8s内置了多种存储支持动态供应，常用的包括Ceph、NFS等，本文记录下NFS动态供应的搭建过程，并对比两者的优势和不足作为选型参考。</description>
+    </item>
+    
+    <item>
+      <title>边缘AI场景技术选型(调度和存储)</title>
+      <link>https://hwk42.github.io/blog/cloudnative/%E8%BE%B9%E7%BC%98ai%E5%9C%BA%E6%99%AF%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B/</link>
+      <pubDate>Tue, 13 Apr 2021 11:07:27 +0800</pubDate>
+      
+      <guid>https://hwk42.github.io/blog/cloudnative/%E8%BE%B9%E7%BC%98ai%E5%9C%BA%E6%99%AF%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B/</guid>
+      <description>调度 K3s K3s是Rancher公司发布的目前全球用户量最大的CNCF认证轻量级K8S发行版。K3s将Kubernetes和其他组件打包在一个不足60M的二进制文件中，因此部署简单、占用资源少，尤其适用于边缘、嵌入式K8s等场景。与标准版K8s相比，K3s使用sqlite3作为默认存储后端，也支持Etcd3，MySQL和Postgres；同时默认使用containerd容器运行时，docker为可选项。</description>
+    </item>
+    
+  </channel>
+</rss>

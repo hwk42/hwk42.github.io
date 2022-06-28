@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>工具 on Walker的博客</title>
+    <link>https://hwk42.github.io/categories/%E5%B7%A5%E5%85%B7/</link>
+    <description>Recent content in 工具 on Walker的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Walker - All rights reserved</copyright>
+    <lastBuildDate>Tue, 15 Oct 2019 00:29:39 +0800</lastBuildDate><atom:link href="https://hwk42.github.io/categories/%E5%B7%A5%E5%85%B7/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>使用Hugo在GitHub Pages搭建个人博客</title>
+      <link>https://hwk42.github.io/blog/tools/%E4%BD%BF%E7%94%A8hugo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/</link>
+      <pubDate>Tue, 15 Oct 2019 00:29:39 +0800</pubDate>
+      
+      <guid>https://hwk42.github.io/blog/tools/%E4%BD%BF%E7%94%A8hugo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/</guid>
+      <description>一直想找个地方记录自己的学习过程，既方便日后回顾，也能通过写博客梳理知识的逻辑。原本打算在CSDN这样的平台上写的，活跃度也高，但被注册过程恶心到了，不止要手机认证，还要关注公众号发验证码。谷歌了一圈，大概有Hexo和Hugo两种方案，前者比较成熟，不过是基于npm的，性能比基于go的hugo要慢，而hugo上手也简单。考虑到GitHub的强大和网站维护性(其实是没钱买服务器)，GitHub Pages成了托管网站的首选。</description>
+    </item>
+    
+  </channel>
+</rss>

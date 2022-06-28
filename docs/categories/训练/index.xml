@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>训练 on Walker的博客</title>
+    <link>https://hwk42.github.io/categories/%E8%AE%AD%E7%BB%83/</link>
+    <description>Recent content in 训练 on Walker的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Walker - All rights reserved</copyright>
+    <lastBuildDate>Wed, 19 Feb 2020 23:42:15 +0800</lastBuildDate><atom:link href="https://hwk42.github.io/categories/%E8%AE%AD%E7%BB%83/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>混合精度训练</title>
+      <link>https://hwk42.github.io/blog/machinelearning/%E6%B7%B7%E5%90%88%E7%B2%BE%E5%BA%A6%E8%AE%AD%E7%BB%83/</link>
+      <pubDate>Wed, 19 Feb 2020 23:42:15 +0800</pubDate>
+      
+      <guid>https://hwk42.github.io/blog/machinelearning/%E6%B7%B7%E5%90%88%E7%B2%BE%E5%BA%A6%E8%AE%AD%E7%BB%83/</guid>
+      <description>混合精度训练可以在不改变网络架构的前提下，通过以半精度格式执行操作来显着提高计算速度，同时以单精度存储最少的信息以在网络的关键部分中保留尽可能多的信息。当前深度学习训练/推理使用的主流数值精度是32bit(即FP32)，随着深度学习商用硬件的发展，16bit(FP16/DFP16)混合精度在训练中的应用逐渐成熟，如Intel的NNP，NVIDIA的 Tensor Core。</description>
+    </item>
+    
+  </channel>
+</rss>

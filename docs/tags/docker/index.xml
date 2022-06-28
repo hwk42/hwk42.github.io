@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Docker on Walker的博客</title>
+    <link>https://hwk42.github.io/tags/docker/</link>
+    <description>Recent content in Docker on Walker的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Walker - All rights reserved</copyright>
+    <lastBuildDate>Thu, 19 Mar 2020 23:45:31 +0800</lastBuildDate><atom:link href="https://hwk42.github.io/tags/docker/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>一个例子理解Docker和Kubernetes</title>
+      <link>https://hwk42.github.io/blog/cloudnative/%E4%B8%80%E4%B8%AA%E4%BE%8B%E5%AD%90%E7%90%86%E8%A7%A3docker%E5%92%8Ckubernetes/</link>
+      <pubDate>Thu, 19 Mar 2020 23:45:31 +0800</pubDate>
+      
+      <guid>https://hwk42.github.io/blog/cloudnative/%E4%B8%80%E4%B8%AA%E4%BE%8B%E5%AD%90%E7%90%86%E8%A7%A3docker%E5%92%8Ckubernetes/</guid>
+      <description>docker和k8s早已成为云原生架构的事实标准，在运维、调度、机器学习炼丹等场景均有大范围应用。当下这么大红大紫的技术不了解点皮毛确实说不过去，但对平时只做后台或算法的同学来说其门槛相对还是较高。这里从一个简单的例子，抛开底层技术原理，尽量减少专业术语，以通俗易懂的方式介绍下它们如何能帮助开发和算法工程师更好地玩耍。</description>
+    </item>
+    
+  </channel>
+</rss>

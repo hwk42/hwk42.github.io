@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod                                            
+metadata:
+ name: flask-helloworld      
+ labels:
+    app: flask-helloworld                        
+spec:                                                
+ containers:
+   - image: flask-py3:latest                                
+     imagePullPolicy: IfNotPresent
+     command: ["python3"]
+     args: ["web.py"]
+     name: flask-helloworld                          
+     ports:
+       - containerPort: 5000                         

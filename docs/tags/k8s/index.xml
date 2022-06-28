@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>K8s on Walker的博客</title>
+    <link>https://hwk42.github.io/tags/k8s/</link>
+    <description>Recent content in K8s on Walker的博客</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Walker - All rights reserved</copyright>
+    <lastBuildDate>Tue, 13 Apr 2021 11:07:27 +0800</lastBuildDate><atom:link href="https://hwk42.github.io/tags/k8s/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>边缘AI场景技术选型(调度和存储)</title>
+      <link>https://hwk42.github.io/blog/cloudnative/%E8%BE%B9%E7%BC%98ai%E5%9C%BA%E6%99%AF%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B/</link>
+      <pubDate>Tue, 13 Apr 2021 11:07:27 +0800</pubDate>
+      
+      <guid>https://hwk42.github.io/blog/cloudnative/%E8%BE%B9%E7%BC%98ai%E5%9C%BA%E6%99%AF%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B/</guid>
+      <description>调度 K3s K3s是Rancher公司发布的目前全球用户量最大的CNCF认证轻量级K8S发行版。K3s将Kubernetes和其他组件打包在一个不足60M的二进制文件中，因此部署简单、占用资源少，尤其适用于边缘、嵌入式K8s等场景。与标准版K8s相比，K3s使用sqlite3作为默认存储后端，也支持Etcd3，MySQL和Postgres；同时默认使用containerd容器运行时，docker为可选项。</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en-us"><head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="generator" content="Hugo 0.101.0" />
+	
+	<link rel="icon" href="/images/logo.png">
+	
+	<title>使用Hugo在GitHub Pages搭建个人博客 | Walker的博客</title>
+	
+	
+
+	<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://hwk42.github.io/blog/tools/%E4%BD%BF%E7%94%A8hugo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/cover-micheile-henderson-KXDtrR4LgL8-unsplash.jpg"/>
+<meta name="twitter:title" content="使用Hugo在GitHub Pages搭建个人博客"/>
+<meta name="twitter:description" content="一直想找个地方记录自己的学习过程，既方便日后回顾，也能通过写博客梳理知识的逻辑。原本打算在CSDN这样的平台上写的，活跃度也高，但被注册过程恶心到了，不止要手机认证，还要关注公众号发验证码。谷歌了一圈，大概有Hexo和Hugo两种方案，前者比较成熟，不过是基于npm的，性能比基于go的hugo要慢，而hugo上手也简单。考虑到GitHub的强大和网站维护性(其实是没钱买服务器)，GitHub Pages成了托管网站的首选。"/>
+
+	<meta property="og:title" content="使用Hugo在GitHub Pages搭建个人博客" />
+<meta property="og:description" content="一直想找个地方记录自己的学习过程，既方便日后回顾，也能通过写博客梳理知识的逻辑。原本打算在CSDN这样的平台上写的，活跃度也高，但被注册过程恶心到了，不止要手机认证，还要关注公众号发验证码。谷歌了一圈，大概有Hexo和Hugo两种方案，前者比较成熟，不过是基于npm的，性能比基于go的hugo要慢，而hugo上手也简单。考虑到GitHub的强大和网站维护性(其实是没钱买服务器)，GitHub Pages成了托管网站的首选。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://hwk42.github.io/blog/tools/%E4%BD%BF%E7%94%A8hugo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/" /><meta property="og:image" content="https://hwk42.github.io/blog/tools/%E4%BD%BF%E7%94%A8hugo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/cover-micheile-henderson-KXDtrR4LgL8-unsplash.jpg"/><meta property="article:section" content="blog" />
+<meta property="article:published_time" content="2019-10-15T00:29:39+08:00" />
+<meta property="article:modified_time" content="2019-10-15T00:29:39+08:00" />
+
+
+
+	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp"
+	 crossorigin="anonymous">
+	<link href="https://fonts.googleapis.com/css?family=Righteous%7CMerriweather:300,300i,400,400i,700,700i" rel="stylesheet">
+	<link href="/css/medium.css" rel="stylesheet">
+	<link href="/css/additional.css" rel="stylesheet">
+
+	
+	
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top mediumnavigation nav-down">
+    <div class="container pr-0">
+        
+        <a class="navbar-brand" href="https://hwk42.github.io//">
+
+            
+            <img src="/images/logo.png" alt="logo">
+            
+        </a>
+        
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMediumish" aria-controls="navbarSupportedContent"
+            aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        
+        <div class="collapse navbar-collapse" id="navbarMediumish">
+            
+            <ul class="navbar-nav ml-auto">
+                 
+                <li class="nav-item ">
+                    <a class="nav-link" href="/blog">Blog</a>
+                </li>
+                 
+                <li class="nav-item ">
+                    <a class="nav-link" href="/">About Me</a>
+                </li>
+                
+            </ul>
+        </div>
+        
+    </div>
+</nav>
+
+
+        <div class="site-content">   
+            <div class="container">
+<div class="mainheading">
+    <h1 class="sitetitle">Walker的博客</h1>
+    <p class="lead">
+         人生就是不断的起起起起
+    </p>
+</div><div class="main-content">
+        
+        <div class="container">
+            <div class="row">
+                
+                <div class="col-md-2 pl-0"><div class="share sticky-top sticky-top-offset">
+    <p>Share</p>
+    <ul>
+        <li class="ml-1 mr-1">
+        <a target="_blank" href="https://twitter.com/intent/tweet?text=%e4%bd%bf%e7%94%a8Hugo%e5%9c%a8GitHub%20Pages%e6%90%ad%e5%bb%ba%e4%b8%aa%e4%ba%ba%e5%8d%9a%e5%ae%a2&url=https%3a%2f%2fhwk42.github.io%2fblog%2ftools%2f%25E4%25BD%25BF%25E7%2594%25A8hugo%25E6%2590%25AD%25E5%25BB%25BA%25E4%25B8%25AA%25E4%25BA%25BA%25E5%258D%259A%25E5%25AE%25A2%2f" onclick="window.open(this.href, 'twitter-share', 'width=550,height=435');return false;">
+        <i class="fab fa-twitter"></i>
+        </a>
+        </li>
+        
+        <li class="ml-1 mr-1">
+        <a target="_blank" href="https://facebook.com/sharer.php?u=https%3a%2f%2fhwk42.github.io%2fblog%2ftools%2f%25E4%25BD%25BF%25E7%2594%25A8hugo%25E6%2590%25AD%25E5%25BB%25BA%25E4%25B8%25AA%25E4%25BA%25BA%25E5%258D%259A%25E5%25AE%25A2%2f" onclick="window.open(this.href, 'facebook-share', 'width=550,height=435');return false;">
+        <i class="fab fa-facebook-f"></i>
+        </a>
+        </li>
+      
+    </ul>
+
+    
+</div>
+</div>
+                                
+                <div class="col-md-9 flex-first flex-md-unordered">
+                    <div class="mainheading">
+                        	
+                        
+                        
+                        
+                        <div class="row post-top-meta">
+                            <div class="col-xs-12 col-md-3 col-lg-2 text-center text-md-left mb-4 mb-md-0 md-nopad-right">
+                                <img class="author-thumb" src="/images/cover.png" alt="Walker">
+                            </div>
+                            <div class="col-xs-12 col-md-9 col-lg-10 text-center text-md-left md-nopad-left">
+                                <a target="_blank" class="link-dark">Walker</a><br>
+                                <span class="author-description">
+                                    dedicate to cool things<br>
+                                    <i class="far fa-star"></i>
+                                    Oct 15, 2019
+                                    <i class="far fa-clock clock"></i>
+                                    1 min read
+                                </span>					
+                            </div>
+                        </div>			
+                        	
+                        
+                                                
+                        
+                        <h1 class="posttitle">使用Hugo在GitHub Pages搭建个人博客</h1> 
+                    </div>
+
+                    
+                    
+                    
+                        <img class="featured-image img-fluid" src="https://hwk42.github.io/blog/tools/%E4%BD%BF%E7%94%A8hugo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/cover-micheile-henderson-KXDtrR4LgL8-unsplash.jpg" alt="thumbnail for this post">
+                    
+                    
+
+                    
+                    <div class="article-post">
+                        <p>一直想找个地方记录自己的学习过程，既方便日后回顾，也能通过写博客梳理知识的逻辑。原本打算在<code>CSDN</code>这样的平台上写的，活跃度也高，但被注册过程恶心到了，不止要手机认证，还要关注公众号发验证码。谷歌了一圈，大概有<code>Hexo</code>和<code>Hugo</code>两种方案，前者比较成熟，不过是基于npm的，性能比基于go的hugo要慢，而hugo上手也简单。考虑到GitHub的强大和网站维护性(其实是没钱买服务器)，GitHub Pages成了托管网站的首选。</p>
+<h3 id="安装并初始化站点">安装并初始化站点</h3>
+<p>这里使用Mac的Homebrew安装，其他安装方式可参看<a href="https://gohugo.io/">官网</a></p>
+<pre tabindex="0"><code>brew install hugo
+hugo new site hwk42
+</code></pre><p>该命令生成如下的目录：</p>
+<ul>
+<li><strong>archetypes</strong> 新文章默认模板</li>
+<li><strong>content</strong> 存放所有Markdown格式的文章</li>
+<li><strong>layouts</strong> 存放自定义的view，可为空</li>
+<li><strong>static</strong> 存放图像、CNAME、CSS、JS等资源，发布后该目录下所有资源将处于网页根目录</li>
+<li><strong>themes</strong> 存放下载的主题</li>
+<li><strong>config.toml</strong> Hugo配置文档</li>
+</ul>
+<h3 id="添加主题">添加主题</h3>
+<p>在<a href="https://themes.gohugo.io/">官方主题</a>选自己喜欢的主题，这里使用<a href="https://github.com/rujews/maupassant-hugo">maupassant</a></p>
+<pre tabindex="0"><code>cd hwk42
+git clone https://github.com/rujews/maupassant-hugo themes/maupassant
+echo &#39;theme = &#34;maupassant&#34;&#39; &gt;&gt; config.toml
+</code></pre><h3 id="在网站写点东西">在网站写点东西</h3>
+<pre tabindex="0"><code>hugo new post/my-first-post.md
+</code></pre><p>这里post是content下的文章目录，改成对应的即可</p>
+<h3 id="本地预览">本地预览</h3>
+<pre tabindex="0"><code>hugo server -D
+</code></pre><p>编译成功后可在浏览器访问 <em>http://localhost:1313/</em>，预览没问题可使用<code>hugo</code>命令生成静态文件，用于后续部署</p>
+<h3 id="自定义配置">自定义配置</h3>
+<p><code>config.toml</code>是站点页面控制的主要入口，包括一些通用的和主题有关的配置项。下面是部分常见的配置项，可参照改为自己的</p>
+<pre tabindex="0"><code>baseURL = &#34;https://hwk42.github.io/hwk42/&#34; #网站地址
+languageCode = &#34;zh-Hans&#34;
+title = &#34;Walker的博客&#34;
+theme = &#34;maupassant&#34;
+summaryLength = 140
+paginate = 10 # 每页的文章数
+</code></pre><h3 id="发布并托管到github">发布并托管到Github</h3>
+<p>在github中创建一个以用户名为名的repo，注意不要添加如<code>README</code>，<code>.gitignore</code>等文档，即网站的repo地址为：<em><a href="https://github.com/hwk42/hwk42.git">https://github.com/hwk42/hwk42.git</a></em></p>
+<p>在网站的根目录下初始化并push静态网站资源：</p>
+<pre tabindex="0"><code>git init
+git add .
+git commit -m &#34;first commit&#34;
+git remote add origin https://github.com/hwk42/hwk42.git
+git push -u origin master
+</code></pre><p>参见<a href="https://gohugo.io/hosting-and-deployment/hosting-on-github/">官方文档</a>，有两种方式可以托管网站</p>
+<ul>
+<li>配置Hugo将网页生成在名为/docs的子目录中，然后直接push到master branch</li>
+<li>仍然使用默认的/public子目录存储网页，再单独建立一个gh-pages branch</li>
+</ul>
+<h4 id="使用docs发布到master-branch">使用/docs发布到master branch</h4>
+<p>首先在<code>config.toml</code>文件增加配置</p>
+<pre tabindex="0"><code>publishDir = &#34;docs&#34;
+</code></pre><p>该配置在使用<code>hugo</code>命令时将编译的静态文件输出到<code>docs</code>目录(默认输出到<code>public</code>);</p>
+<p>在repo上<code>Settings</code>配置GitHub Pages目录为<code>docs</code>，如图：
+<img src="github_page.png" alt=""></p>
+<h3 id="配置个人域名">配置个人域名</h3>
+<p>对于人民币玩家，可购买自定义域名，个人暂无此需求，就不展开了</p>
+<h3 id="配置搜索引擎">配置搜索引擎</h3>
+<p>为了让搜索引擎抓取博客的内容以便其他人平时能搜索到，需要告诉搜索引擎网站的信息。以Google为例，进入<a href="https://search.google.com/search-console">Google Search Console</a>，
+有几种方式可以验证网站，建议使用文件验证，把文件放到根目录<code>docs</code>下，提交域名即可。<code>header</code>的方式重新编译时可能会丢失。</p>
+<h3 id="tips">Tips</h3>
+<ul>
+<li><strong>网站使用根路径</strong> 如果不希望有子路径，仓库名创建为<code>用户名.github.io</code>，这样网站地址为<em><a href="https://hwk42.github.io">https://hwk42.github.io</a></em></li>
+<li><strong>关于本地图片的引用</strong> 网络上大多教程都提到直接在<code>static</code>目录下放置文章所需图片，这种方法在本地预览时无法正常显示，可能是hugo不能正常识别Markdown的路径。为了更方便管理文章和图片，可以在<code>post</code>目录下新建一个以为文章名命名的文件夹，同时将文章和所用到的图片资源放在该目录下，文章内容写在<code>index.md</code>里，引用文件时直接索引当前目录即可，如<code>![image](1.jpg)</code></li>
+<li><strong>自定义图片大小</strong> 新建layout文件至<code>layouts/shortcodes/image-resize.html</code>，贴上以下内容：</li>
+</ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-html" data-lang="html"><span style="display:flex;"><span>{{ $original := .Page.Resources.GetMatch (.Get 0) }}
+</span></span><span style="display:flex;"><span>{{ $options := .Get 1 }}
+</span></span><span style="display:flex;"><span>{{ .Scratch.Set &#34;image&#34; ($original.Fit $options) }}
+</span></span><span style="display:flex;"><span>{{ $image := .Scratch.Get &#34;image&#34; }}
+</span></span><span style="display:flex;"><span>{{ $title := .Get 2 }}
+</span></span><span style="display:flex;"><span>&lt;<span style="color:#f92672">img</span> <span style="color:#a6e22e">src</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{{ $image.RelPermalink }}&#34;</span> <span style="color:#a6e22e">width</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{{ $image.Width }}&#34;</span> <span style="color:#a6e22e">height</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{{ $image.Height }}&#34;</span> <span style="color:#a6e22e">alt</span><span style="color:#f92672">=</span><span style="color:#e6db74">&#34;{{ $title }}&#34;</span>&gt;
+</span></span></code></pre></div><p><code>md</code>文件引用时使用{{&lt; image-resize $image &ldquo;500x500&rdquo; &gt;}}格式即可</p>
+<h3 id="reference">Reference</h3>
+<ul>
+<li><a href="https://www.isyin.cn/post/2018-05-03-hugo-%E7%9A%84%E6%96%87%E4%BB%B6%E7%AE%A1%E7%90%86%E6%96%B9%E6%A1%88/">Hugo 的文件管理方案</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/37752930">如何使用Hugo在GitHub Pages上搭建免费个人网站</a></li>
+</ul>
+
+                    </div>
+                    
+                    
+                    <div class="after-post-tags">
+                        <ul class="tags">
+                        
+                        <li>
+                        <a href="/tags/tutorial">Tutorial</a>
+                        </li>
+                        
+                        <li>
+                        <a href="/tags/%E5%B7%A5%E5%85%B7">工具</a>
+                        </li>
+                        
+                        </ul>
+                    </div>
+                    
+                    
+                    
+                    <div class="row PageNavigation d-flex justify-content-between font-weight-bold">
+                    
+                        <a class="d-block col-md-6" href="https://hwk42.github.io/blog/machinelearning/%E7%9B%B8%E4%BC%BC%E5%90%91%E9%87%8F%E6%A3%80%E7%B4%A2/"> &laquo; 相似向量搜索：使用Keras实现以图搜图</a>
+                    
+                    
+                    <div class="clearfix"></div>
+                    </div>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+    </div>
+
+
+            </div>
+<div class="jumbotron fortags">
+	<div class="d-md-flex h-100">
+		<div class="col-md-4 transpdark align-self-center text-center h-100">
+			<div class="d-md-flex align-items-center justify-content-center h-100">
+				<h2 class="d-md-block d-none align-self-center py-1 font-weight-light">Explore <span class="d-none d-md-inline">→</span></h2>
+			</div>
+		</div>
+		<div class="col-md-8 p-5 align-self-center text-center">
+			
+			<a class="mt-1 mb-1" href="/tags/cbir">cbir</a>
+			
+			<a class="mt-1 mb-1" href="/tags/docker">docker</a>
+			
+			<a class="mt-1 mb-1" href="/tags/gpu">gpu</a>
+			
+			<a class="mt-1 mb-1" href="/tags/ingress">ingress</a>
+			
+			<a class="mt-1 mb-1" href="/tags/k8s">k8s</a>
+			
+			<a class="mt-1 mb-1" href="/tags/kubernetes">kubernetes</a>
+			
+			<a class="mt-1 mb-1" href="/tags/nfs">nfs</a>
+			
+			<a class="mt-1 mb-1" href="/tags/presto">presto</a>
+			
+			<a class="mt-1 mb-1" href="/tags/spark">spark</a>
+			
+			<a class="mt-1 mb-1" href="/tags/traefik">traefik</a>
+			
+			<a class="mt-1 mb-1" href="/tags/trino">trino</a>
+			
+			<a class="mt-1 mb-1" href="/tags/tutorial">tutorial</a>
+			
+			<a class="mt-1 mb-1" href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F">云原生</a>
+			
+			<a class="mt-1 mb-1" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8">分布式存储</a>
+			
+			<a class="mt-1 mb-1" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97">分布式计算</a>
+			
+			<a class="mt-1 mb-1" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE">大数据</a>
+			
+			<a class="mt-1 mb-1" href="/tags/%E5%AD%98%E5%82%A8">存储</a>
+			
+			<a class="mt-1 mb-1" href="/tags/%E5%B7%A5%E5%85%B7">工具</a>
+			
+			<a class="mt-1 mb-1" href="/tags/%E6%8E%A8%E7%90%86">推理</a>
+			
+			<a class="mt-1 mb-1" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0">机器学习</a>
+			
+			<a class="mt-1 mb-1" href="/tags/%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%90%9C%E7%B4%A2">相似性搜索</a>
+			
+		</div>
+	</div>
+</div>
+
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-sm-6 text-center text-lg-left">
+                &copy; Copyright Walker - All rights reserved
+            </div>
+            <div class="col-md-6 col-sm-6 text-center text-lg-right">    
+                <a target="_blank" rel="noopener" href="https://www.wowthemes.net">Mediumish Theme</a> by WowThemes.net
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+        </div>
+
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+<script src="/js/mediumish.js"></script>
+
+    </body>
+</html>

@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en-us"><head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="generator" content="Hugo 0.101.0" />
+	
+	<link rel="icon" href="/images/logo.png">
+	
+	<title>大数据计算之Trino简介 | Walker的博客</title>
+	
+	
+
+	<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:image" content="https://hwk42.github.io/blog/bigdata/trino%E7%AE%80%E4%BB%8B/cover-brooke-lark-IDonmDWrXO8-unsplash.jpg"/>
+<meta name="twitter:title" content="大数据计算之Trino简介"/>
+<meta name="twitter:description" content="Trino(即以前的Presto SQL)是为分布式数仓和分析设计的高效在线分析处理(OLAP)工具。与HIVE等数仓工具相比，Trino尤其适用于在大量数据中快速返回查询结果。除HDFS，Trino也支持传统的关系型数据库和其他如Cassandra、MongoDB等半结构化数据，且可以同时跨多个不在同一数据中心源查询。"/>
+
+	<meta property="og:title" content="大数据计算之Trino简介" />
+<meta property="og:description" content="Trino(即以前的Presto SQL)是为分布式数仓和分析设计的高效在线分析处理(OLAP)工具。与HIVE等数仓工具相比，Trino尤其适用于在大量数据中快速返回查询结果。除HDFS，Trino也支持传统的关系型数据库和其他如Cassandra、MongoDB等半结构化数据，且可以同时跨多个不在同一数据中心源查询。" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://hwk42.github.io/blog/bigdata/trino%E7%AE%80%E4%BB%8B/" /><meta property="og:image" content="https://hwk42.github.io/blog/bigdata/trino%E7%AE%80%E4%BB%8B/cover-brooke-lark-IDonmDWrXO8-unsplash.jpg"/><meta property="article:section" content="blog" />
+<meta property="article:published_time" content="2021-04-09T17:50:07+08:00" />
+<meta property="article:modified_time" content="2021-04-09T17:50:07+08:00" />
+
+
+
+	<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp"
+	 crossorigin="anonymous">
+	<link href="https://fonts.googleapis.com/css?family=Righteous%7CMerriweather:300,300i,400,400i,700,700i" rel="stylesheet">
+	<link href="/css/medium.css" rel="stylesheet">
+	<link href="/css/additional.css" rel="stylesheet">
+
+	
+	
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top mediumnavigation nav-down">
+    <div class="container pr-0">
+        
+        <a class="navbar-brand" href="https://hwk42.github.io//">
+
+            
+            <img src="/images/logo.png" alt="logo">
+            
+        </a>
+        
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarMediumish" aria-controls="navbarSupportedContent"
+            aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        
+        <div class="collapse navbar-collapse" id="navbarMediumish">
+            
+            <ul class="navbar-nav ml-auto">
+                 
+                <li class="nav-item ">
+                    <a class="nav-link" href="/blog">Blog</a>
+                </li>
+                 
+                <li class="nav-item ">
+                    <a class="nav-link" href="/">About Me</a>
+                </li>
+                
+            </ul>
+        </div>
+        
+    </div>
+</nav>
+
+
+        <div class="site-content">   
+            <div class="container">
+<div class="mainheading">
+    <h1 class="sitetitle">Walker的博客</h1>
+    <p class="lead">
+         人生就是不断的起起起起
+    </p>
+</div><div class="main-content">
+        
+        <div class="container">
+            <div class="row">
+                
+                <div class="col-md-2 pl-0"><div class="share sticky-top sticky-top-offset">
+    <p>Share</p>
+    <ul>
+        <li class="ml-1 mr-1">
+        <a target="_blank" href="https://twitter.com/intent/tweet?text=%e5%a4%a7%e6%95%b0%e6%8d%ae%e8%ae%a1%e7%ae%97%e4%b9%8bTrino%e7%ae%80%e4%bb%8b&url=https%3a%2f%2fhwk42.github.io%2fblog%2fbigdata%2ftrino%25E7%25AE%2580%25E4%25BB%258B%2f" onclick="window.open(this.href, 'twitter-share', 'width=550,height=435');return false;">
+        <i class="fab fa-twitter"></i>
+        </a>
+        </li>
+        
+        <li class="ml-1 mr-1">
+        <a target="_blank" href="https://facebook.com/sharer.php?u=https%3a%2f%2fhwk42.github.io%2fblog%2fbigdata%2ftrino%25E7%25AE%2580%25E4%25BB%258B%2f" onclick="window.open(this.href, 'facebook-share', 'width=550,height=435');return false;">
+        <i class="fab fa-facebook-f"></i>
+        </a>
+        </li>
+      
+    </ul>
+
+    
+        <div class="sep">
+        </div>				
+        <ul>
+            <li> 
+            <a  class="small smoothscroll" href="#disqus_thread"></a>
+            </li>
+        </ul>
+    
+</div>
+</div>
+                                
+                <div class="col-md-9 flex-first flex-md-unordered">
+                    <div class="mainheading">
+                        	
+                        
+                        
+                        
+                        <div class="row post-top-meta">
+                            <div class="col-xs-12 col-md-3 col-lg-2 text-center text-md-left mb-4 mb-md-0 md-nopad-right">
+                                <img class="author-thumb" src="/images/cover.png" alt="Walker">
+                            </div>
+                            <div class="col-xs-12 col-md-9 col-lg-10 text-center text-md-left md-nopad-left">
+                                <a target="_blank" class="link-dark">Walker</a><br>
+                                <span class="author-description">
+                                    dedicate to cool things<br>
+                                    <i class="far fa-star"></i>
+                                    Apr 9, 2021
+                                    <i class="far fa-clock clock"></i>
+                                    3 min read
+                                </span>					
+                            </div>
+                        </div>			
+                        	
+                        
+                                                
+                        
+                        <h1 class="posttitle">大数据计算之Trino简介</h1> 
+                    </div>
+
+                    
+                    
+                    
+                        <img class="featured-image img-fluid" src="https://hwk42.github.io/blog/bigdata/trino%E7%AE%80%E4%BB%8B/cover-brooke-lark-IDonmDWrXO8-unsplash.jpg" alt="thumbnail for this post">
+                    
+                    
+
+                    
+                    <div class="article-post">
+                        <p>Trino(即以前的Presto SQL)是为分布式数仓和分析设计的高效在线分析处理(OLAP)工具。与HIVE等数仓工具相比，Trino尤其适用于在大量数据中快速返回查询结果。除HDFS，Trino也支持传统的关系型数据库和其他如Cassandra、MongoDB等半结构化数据，且可以同时跨多个不在同一数据中心源查询。</p>
+<h3 id="olap是什么">OLAP是什么</h3>
+<p>OLAP（On-line Analytical Processing，联机分析处理）是在基于数据仓库多维模型的基础上实现的面向分析的各类操作的集合。可以比较下其与传统的OLTP（On-line Transaction Processing，联机事务处理）的区别来看一下它的特点：
+<img src="OLTP-vs-OLAP.png" alt=""></p>
+<h3 id="trino架构及工作原理">Trino架构及工作原理</h3>
+<p><img src="trino-architecture.png" alt="">
+如图示，Trino使用与经典大规模并行处理(MPP)数据库管理系统相似的架构，主要包括一个Coordinator节点和若干Worker节点。用户提交SQL任务时，Coordinator负责语句解析，制定查询计划，管理和调度Worker节点。Worker节点负责任务执行和数据处理，包括从connectors获取数据、与其他Worker节点交换中间数据。Trino集群中节点之间通过REST API通信，由于在内存中的处理，避免了不必要的 I/O 开销，查询结果的返回速度非常快。中间数据以MPP方式跨节点流水线传输，因此可实现高度交互的查询性能。它设计用于支持标准ANSI SQL语义，包括复杂查询、聚合、联接、左/右外联接、子查询、开窗函数、不重复计数和近似百分位数。</p>
+<h3 id="trino基础">Trino基础</h3>
+<h4 id="数据模型">数据模型</h4>
+<p>Trino使用Catalog、Schema和Table 3层结构来管理数据</p>
+<ul>
+<li>Catalog: 可以理解为数据源，包含多个Schema，通过connector引用一种数据源，比如hive。可以通过<code>show catalogs</code>命令查看Trino连接的所有数据源。</li>
+<li>Schema: 相当于数据库的概念，一个Schema包含多张数据表。<code>show schemas from &lt;catalog_name&gt;</code>可列出<code>catalog_name</code>下的所有schema。</li>
+<li>Table: 表，和其他MySQL等关系型数据库的表一样，包含无序的列，<code>show tables from &lt;catalog_name.schema_name&gt;</code>可查看<code>catalog_name.schema_name</code>下的所有表。</li>
+</ul>
+<p>综上，Trino定位一张表的描述是：数据源.数据库.数据表，即增加了Catalog的概念。</p>
+<h4 id="连接trino">连接Trino</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>./trino --server http://trino:8080 --catalog hive --schema tiny --user hive --debug 
+</span></span></code></pre></div><h3 id="trino与其他olap引擎的对比">Trino与其他OLAP引擎的对比</h3>
+<table>
+<thead>
+<tr>
+<th>引擎/对比项目</th>
+<th>Kylin</th>
+<th>Presto</th>
+<th>Impala</th>
+<th>Druid</th>
+<th>SparkSQL</th>
+<th>ES</th>
+<th>Kudu</th>
+<th>ClickHouse</th>
+<th>Doris</th>
+<th>TiDB</th>
+<th>Hive</th>
+<th>Greenplum</th>
+<th>SnappyData</th>
+<th>Hawq</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>亚秒级响应</td>
+<td>Y</td>
+<td>N</td>
+<td>Y</td>
+<td>Y</td>
+<td>N</td>
+<td>N</td>
+<td>Y（据说可以到达秒级）</td>
+<td>单表查询Y，多表查询N</td>
+<td>Y（ms-s性能高于Kylin‘）</td>
+<td>N</td>
+<td>N</td>
+<td>Y</td>
+<td>Y</td>
+<td>N</td>
+</tr>
+<tr>
+<td>高并发</td>
+<td>Y</td>
+<td>N</td>
+<td>Y</td>
+<td>Y</td>
+<td>N</td>
+<td>N</td>
+<td>Y</td>
+<td>N</td>
+<td>N</td>
+<td>Y</td>
+<td>Y</td>
+<td>N</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>百亿数据集</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td></td>
+<td>Y</td>
+<td>Y</td>
+<td>N</td>
+<td>N</td>
+<td>Y</td>
+<td></td>
+</tr>
+<tr>
+<td>SQL支持</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>N（开发中）</td>
+<td>Y</td>
+<td>N</td>
+<td>Y（结合Impala可支持SQL查询）</td>
+<td>Y（支持Sql中基本语法对于开窗函数还不支持）</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>离线</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>实时</td>
+<td>N（开发中，目前主要支持Kafka 流构建 Cube）</td>
+<td>N</td>
+<td>N</td>
+<td>Y</td>
+<td>N</td>
+<td>Y</td>
+<td>Y（Spark Streaming）</td>
+<td>Y（实时数据分析领域的黑马）</td>
+<td>Y</td>
+<td>Y</td>
+<td>N</td>
+<td>N</td>
+<td>Y</td>
+<td>N</td>
+</tr>
+<tr>
+<td>精准去重能力</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>N</td>
+<td>Y</td>
+<td>N</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>是否支持明细查询</td>
+<td>N</td>
+<td>Y</td>
+<td>N</td>
+<td>N</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>多表join</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>N</td>
+<td>Y</td>
+<td>N</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>能否更改模型</td>
+<td>N</td>
+<td>Y</td>
+<td>N</td>
+<td>N</td>
+<td>Y</td>
+<td>N</td>
+<td>Y</td>
+<td>Y（更换表引擎）</td>
+<td>N</td>
+<td>Y</td>
+<td>Y</td>
+<td>N</td>
+<td>Y</td>
+<td>未知</td>
+</tr>
+<tr>
+<td>JDBC/ODBC for BI集成</td>
+<td>Y</td>
+<td>Y</td>
+<td>N</td>
+<td>N</td>
+<td>Y</td>
+<td>N</td>
+<td>Y</td>
+<td>N</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>N</td>
+<td>Y</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>WEB GUI</td>
+<td>Y</td>
+<td>Y</td>
+<td>Y</td>
+<td>N</td>
+<td>N</td>
+<td>N</td>
+<td>Y</td>
+<td>Y</td>
+<td>N</td>
+<td>Y</td>
+<td>N</td>
+<td>未知</td>
+<td>未知</td>
+<td>Y</td>
+</tr>
+<tr>
+<td>REST API</td>
+<td>Y</td>
+<td>N</td>
+<td>Y</td>
+<td>N</td>
+<td>N</td>
+<td>Y</td>
+<td>N</td>
+<td>N</td>
+<td>N</td>
+<td>N</td>
+<td>N</td>
+<td>未知</td>
+<td>N</td>
+<td>N</td>
+</tr>
+<tr>
+<td>社区活跃度</td>
+<td>活跃</td>
+<td>活跃</td>
+<td>活跃</td>
+<td>活跃</td>
+<td>活跃</td>
+<td>活跃</td>
+<td>较活跃</td>
+<td>不太活跃</td>
+<td>刚起步，核心用户只有Baidu；</td>
+<td>较活跃</td>
+<td>活跃</td>
+<td>活跃</td>
+<td>较活跃</td>
+<td>较活跃</td>
+</tr>
+<tr>
+<td>存储能力</td>
+<td>shared nothing</td>
+<td>shared nothing</td>
+<td>纯计算</td>
+<td>shared nothing</td>
+<td>无</td>
+<td>计算+存储</td>
+<td>列式存储</td>
+<td>计算+存储</td>
+<td>计算+存储</td>
+<td>计算+存储</td>
+<td>存储到HDFS</td>
+<td>计算+存储</td>
+<td>shared</td>
+<td>noting</td>
+</tr>
+<tr>
+<td>成本</td>
+<td>中</td>
+<td>中</td>
+<td>中（CDH据说要收费）</td>
+<td>中</td>
+<td>低</td>
+<td>中</td>
+<td>中</td>
+<td>高</td>
+<td>中</td>
+<td>中</td>
+<td>低</td>
+<td>未知</td>
+<td>高</td>
+<td>中</td>
+</tr>
+<tr>
+<td>易用性</td>
+<td>安装便捷，简单轻量，选择维度表和度量即可构建Cube</td>
+<td>安装简单，基于内存，查询代价较大</td>
+<td>部署简单，基于内存，查询代价较大</td>
+<td>部署简单，基于内存</td>
+<td>部署简单</td>
+<td>部署较简单，但是难用目前发展趋向于专人专岗</td>
+<td>部署简单，需要开发门槛较高，基于磁盘</td>
+<td>简单易用</td>
+<td>按装复杂</td>
+<td>安装部署较为复杂</td>
+<td>部署较简单</td>
+<td>未知</td>
+<td>未知</td>
+<td>部署比较复杂</td>
+</tr>
+<tr>
+<td>监控成本</td>
+<td>自带监控组件、运维成本低</td>
+<td>有公共web监控管理</td>
+<td>自带监控组件，运维成本低</td>
+<td>自带监控可配置，有web页面</td>
+<td>自带监控</td>
+<td>可以使用Kibana实现，成本较高</td>
+<td>已经集成到CDH中，便于监控</td>
+<td>自身具有简单的监控组件，可以联合其他的监控工具进行监控</td>
+<td>监控的集中到Prometheus</td>
+<td>使用开源的 metric 分析及可视化系统Grafana 进行监控</td>
+<td>无自带监控，阿里云有配合hive的监控，成本高</td>
+<td>未知</td>
+<td>运维成本高</td>
+<td>支持多种工具监控</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>下面我们介绍这些系统</p>
+<ul>
+<li>
+<p><strong><code>SQL on Hadoop 系统</code></strong>：无法支持更新，性能也较差。</p>
+</li>
+<li>
+<p><strong><code>TiDB</code></strong>：<br>
+<code>TiDB</code> 虽然当初号称可以支撑 <code>100%的 TP 和 80%的 AP</code>，但是架构设计主要是面向 <code>TP</code> 场景，缺少针对 <code>AP</code>场景专门的优化，所以 <code>OLAP</code> 查询性能较差，TiDB 团队目前<code>正在研发专门的 OLAP 产品：TiFlash</code>，<code>TiFlash 具有以下特点：列存，向量化执行，MPP</code>，而这些特点 <code>Doris</code> 也都有。</p>
+</li>
+<li>
+<p><strong><code>SnappyData</code></strong>：<br>
+<code>SnappyData</code> 是基于 <code>Spark + GemFire</code> 实现的内存数据库，存储引擎，全内存、行列混合存储且完全不需预处理，支持<code>SQL与Spark SQL</code>。<code>SnappyData</code>是个兼顾<code>MPP</code>的特点且<code>colocate</code>特性使得数据本地化，支持<code>join</code>、列表的<code>update</code>以及<code>窗口函数</code>等任意的<code>adhoc</code>查询，<br>
+<strong>主要的优点：</strong> 是<code>性能高，列存压缩+全内存，数据状态共享，秒级查询、实时性强，支持kafka的stream table以及实时导入、处理方式简单，无需预处理，保存明细数据，数据本地存储、灵活性高，是个sql数据库，支持任意字段的查询、update以及窗口函数和复杂的adhoc查询、易用性强，支持标准SQL和Spark SQL，精准去重，支持各种分许函数</code>。<br>
+<strong>缺点：</strong> 是<code>机器成本较高</code>，此外 SnappyData 的计算是基于 JVM 的，会有 GC 问题，影响查询稳定性，维护成本高。<br>
+<strong>主要使用场景</strong>：<code>SnappyData</code>适合那种数据规模中等(<code>PB</code>以下)，需求变化较多，实时性要求较高、响应时间较短且复杂的窗口函数类查询；同时适合查询明细数据以及探索式的<code>adhoc</code>查询如果数据规模不大，且希望找到一种简单易用且实时性要求高的多维<code>OLAP</code>引擎，最重要的是可供分析人员使用的<code>SQL</code>的引擎，那么<code>SnappyData</code>比较适合。前提是需要在成本与效率之间做个平衡，<code>SQL</code>固然能提高开发效率，但内存较大的服务器成本也确实相对较高。</p>
+</li>
+<li>
+<p><strong><code>ClickHouse</code></strong>：<br>
+<code>Clickhouse</code> 是一款单机性能十分彪悍的 <code>OLAP</code> 系统，<code>ClickHouse</code> 作为目前所有开源<code>MPP</code>计算框架中计算速度最快的，它在做多列的表，同时行数很多的表的查询时，性能是很让人兴奋的，但是在做<code>多表的join</code>时，它的性能是不如单宽表查询的。<br>
+<strong>性能测试结果</strong>表明<code>ClickHouse</code>在<code>单表查询方面</code>表现出很大的性能优势，但是在<code>多表查询</code>中性能却比较差，不如<code>presto和impala、hawq</code>的效果好，同时当集群加减节点后，系统不能自动感知集群拓扑变化，也不能自动 <code>balance</code>数据，导致运维成本很高，此外 <code>Clickhouse</code>也不支持标准 <code>SQL</code>，我们用户接入的成本也很高。另外<code>ClickHouse</code> 可以与 <code>Superset</code>对接展示，对<code>clickhouse</code>的监控可以使用<code>Grafana</code>监控。</p>
+</li>
+<li>
+<p><strong><code>Doris</code></strong>：<br>
+对我们用户来说，<code>Doris</code>的优点是功能强大，易用性好。 功能强大指可以满足我们用户的需求，易用性好主要指 兼容 <code>Mysql</code> 协议和语法，以及 <code>Online Schema Change</code>。 兼容 <code>Mysql</code> 协议和语法让用户的学习成本和开发成本很低， 因为在业务快速发展和频繁迭代的情况下，<code>Schema</code>变更会是一个高频的操作。对我们来说，<code>Doris</code> 的优点是易运维，易扩展和高可用、易运维指 <code>Doris</code> 无外部系统依赖，部署和配置都很简单。易扩展指 <code>Doris</code> 可以一键加减节点，并自动均衡数据。高可用值 <code>Doris</code> 的 <code>FE</code> 和 <code>BE</code> 都可以容忍少数节点挂掉。</p>
+</li>
+<li>
+<p><strong><code>SparkSQL</code></strong>：<br>
+<code>SparkSQL</code>是<code>Hadoop</code>中另一个著名的<code>SQL</code>引擎，它以<code>Spark</code>作为底层计算框架，<code>Spark</code>使用<code>RDD</code>作为分布式程序的工作集合，它提供一种分布式共享内存的受限形式。在分布式共享内存系统中，应用可以向全局地址空间的任意位置进行读写操作，而<code>RDD</code>是只读的，对其只能进行创建、转化和求值等操作。这种内存操作大大提高了计算速度。<code>SparkSql</code>的性能相对其他的组件要差一些，多表单表查询性能都不突出。</p>
+</li>
+<li>
+<p><strong><code>Impala</code></strong>：<br>
+官方宣传其计算速度是一大优点，在实际测试中我们也发现它的<code>多表查询性能和presto差不多</code>，但是<code>单表查询方面却不如presto好</code>。而且<code>Impala</code>有很多不支持的地方，例如：不支持<code>update、delete</code>操作，不支持<code>Date</code>数据类型，不支持<code>ORC</code>文件格式等等，所以我们查询时采用<code>parquet</code>格式进行查询，而且<code>Impala</code>在查询时占用的内存很大。</p>
+</li>
+<li>
+<p><strong><code>Presto</code></strong>：<br>
+综合性能比起来要比其余组件好一些，无论是查询性能还是支持的数据源和数据格式方面都要突出一些，在单表查询时性能靠前，多表查询方面性能也很突出。由于<code>Presto</code>是完全基于内存的并行计算，所以<code>Presto</code>在查询时占用的内存也不少，但是发现要比<code>Impala</code>少一些，比如多表<code>join</code>需要很大的内存，<code>Impala</code>占用的内存比<code>Presto</code>要多。</p>
+</li>
+<li>
+<p><strong><code>HAWQ</code></strong> ：<br>
+吸收了先进的基于成本的 <code>SQL</code>查询优化器，自动生成执行计划，可优化使用<code>hadoop</code>集群资源。<code>HAWQ</code> 采用 <code>Dynamic pipelining</code> 技术解决这一关键问题。<code>Dynamic pipelining</code> 是一种并行数据流框架，利用线性可扩展加速<code>Hadoop</code>查询，数据直接存储在<code>HDFS</code>上，并且其<code>SQL</code>查询优化器已经为基于<code>HDFS</code>的文件系统性能特征进行过细致的优化。但是我们发现<code>HAWQ</code>在多表查询时比<code>Presto</code>、<code>Impala</code>差一些；而且不适合单表的复杂聚合操作，单表测试性能方面要比其余四种组件差很多，<code>hawq</code>环境搭建也遇到了诸多问题。</p>
+</li>
+<li>
+<p><strong><code>GreenPlum</code></strong>：<br>
+作为关系型数据库产品，它的特点主要就是查询速度快，数据装载速度快，批量<code>DML</code>处理快。而且性能可以随着硬件的添加，呈线性增加，拥有非常良好的可扩展性。因此，它主要适用于面向分析的应用。比如构建企业级<code>ODS/EDW</code>，或者<code>数据集市</code>等，<code>GREENPLUM</code>都是不错的选择。</p>
+</li>
+<li>
+<p><strong><code>ElasticSearch</code></strong>：<br>
+<code>ES</code>是典型的搜索引擎类的架构系统，在入库时将数据转换为倒排索引，采用<code>Scatter-Gather</code>计算模型提高查询性能。 对于搜索类的查询效果较好，<br>
+<strong>缺点</strong> 但当数据量较大时，对于<code>Scan</code>类和聚合类为主的查询性能较低，<br>
+<strong>主要优点:</strong> 是性能较高，支持倒排索引和各种过滤后的聚合查询、实时性强，在文档上建立完索引后，立刻可以查询、处理方式简单，无需预处理，<br>
+<strong>主要缺点</strong> 是支持的数据规模较小，高并发不理想并且灵活性差，不支持复杂的<code>adhoc</code>查询，在易用性方面也差，不支持<code>SQL</code>；<code>DSL</code>成本高，且不能精准去重，<br>
+<strong>主要适用场景</strong>：<code>ES</code>适合那种全文检索，且数据规模较少时过滤条件很多的聚合查询，并发度也不大的场景。</p>
+</li>
+<li>
+<p><strong><code>Druid</code></strong> :<br>
+是一个实时处理时序数据的<code>OLAP</code>数据库，因为它的索引按照时间分片，查询的时候也是按照时间线去路由索引。</p>
+</li>
+<li>
+<p><strong><code>Kylin</code></strong>：<br>
+核心是<code>Cube</code>，<code>Cube</code>是一种预计算技术，基本思路是预先对数据作多维索引，查询时只扫描索引指向的结果而不访问原始数据从而提速。</p>
+</li>
+<li>
+<p><strong><code>Kudu</code></strong>：<br>
+<code>Kudu</code>的定位不是<code>in-memory database</code>。因为它希望<code>HDFS/Parquet</code>这种存储，因此大量的数据都是存储在磁盘上。如果我们想要拿它代替<code>HDFS/Parquet + HBase</code>，那么超大数据集的查询性能就至关重要，这也是<code>Kudu</code>的最初目的。然而，官方没有给出这方面的相关数据。由于条件限制，网易暂时未能完成该测试。<code>Kudu</code>本质上是将性能的优化，寄托在以列式存储为核心的基础上，希望通过提高存储效率，加快字段投影过滤效率，降低查询时<code>CPU</code>开销等来提升性能。而其他绝大多数设计，都是为了解决在列式存储的基础上支持随机读写这样一个目的而存在的。</p>
+</li>
+<li>
+<p><strong><code>Flink</code></strong><br>
+此外我还对<code>flink</code>进行了调研（调研时间是2020年2月）发现，<code>flink</code>核心是个流式的计算引擎，通过流来模拟批处理，<code>flink sql</code>还处于早期开发阶段，未来社区计划通过提供基于<code>REST</code>的<code>SQL</code>客户端，目前<code>sql</code>客户端不能直接访问<code>hive</code>，通过<code>YAML file</code>文件定义外部数据源，可以连接文件系统和<code>kafka</code>。
+<code>presto、druid、sparkSQL、kylin</code>这几个，其实他们可以分为三类。其中<code>presto</code>和<code>spark sql</code>都是解决<code>分布式查询</code>问题，<code>提供SQL查询能力，但数据加载不一定能保证实时</code>。<code>Druid是保证数据实时写入，但查询上不支持SQL，或者说目前只支持部分SQL，我个人觉得适合用于工业大数据</code>，比如一堆传感器实时写数据的场景。<code>Kylin是MOLAP，就是将数据先进行预聚合，然后把多维查询变成了key-value查询</code>。</p>
+</li>
+<li>
+<p><strong>从成熟度来讲</strong>：<code>kylin&gt;sparksql&gt;Druid&gt;presto</code></p>
+</li>
+<li>
+<p><strong>从超大数据的查询效率来看</strong>：<code>Druid&gt;kylin&gt;presto&gt;sparksql</code></p>
+</li>
+<li>
+<p><strong>从支持的数据源种类来讲</strong>：<code>presto&gt;sparksql&gt;kylin&gt;Druid</code></p>
+</li>
+</ul>
+</blockquote>
+<h3 id="总结">总结</h3>
+<p>得益于简单的架构、常驻进程、全内存计算等特点，Trino尤其适合快速返回结果的场景，如交互式的OLAP工具，多数查询能在几秒内返回。不用像Spark、Hive等计算引擎，查询的发起需要经过资源申请、Yarn调度、进程启动、中间结果落磁盘等环节。另外Trino数据在内存中处理，吞吐量受内存限制，在高吞吐、低成本、高稳定性方面仍然不能代替Hive，Spark。Trino官方正在做Spill To Disk的功能，但是如果计算过程中有数据落盘操作，磁盘IO将可能成为瓶颈，从而影响Query的执行速度。</p>
+<h3 id="trino容器化">Trino容器化</h3>
+<p>Trino的运行不依赖传统的大数据生态，如HDFS，YARN等，也没有自己的存储系统，且自身架构简单，包袱少等特点使其对容器云原生等新技术的融入更有优势。不仅镜像化交付，在接入K8s生态也较容易。生产中可通过deployment+service+configmap的方式即可部署起来(实际上官方提供的helm chart就是这么做的)，也可开发自定义operator的方式，自动进行节点(POD)的扩缩容、资源隔离、配置管理等，降低运维难度。</p>
+<h3 id="reference">Reference</h3>
+<ul>
+<li><a href="http://www.clickhouse.com.cn/topic/5c453371389ad55f127768ea">开源OLAP引擎测评报告(SparkSql、Presto、Impala、HAWQ、ClickHouse、GreenPlum)</a></li>
+<li><a href="https://trino.io/docs/current/">Trino docs</a></li>
+<li><a href="https://segmentfault.com/a/1190000040428093">什么是OLAP？主流八大开源OLAP技术架构对比</a></li>
+<li><a href="https://blog.csdn.net/qq_41018861/article/details/117467804">OLAP引擎调研 —— OLAP引擎性能对比分析</a></li>
+</ul>
+
+                    </div>
+                    
+                    
+                    <div class="after-post-tags">
+                        <ul class="tags">
+                        
+                        <li>
+                        <a href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97">分布式计算</a>
+                        </li>
+                        
+                        <li>
+                        <a href="/tags/presto">Presto</a>
+                        </li>
+                        
+                        <li>
+                        <a href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE">大数据</a>
+                        </li>
+                        
+                        <li>
+                        <a href="/tags/trino">Trino</a>
+                        </li>
+                        
+                        </ul>
+                    </div>
+                    
+                    
+                    
+                    <div class="row PageNavigation d-flex justify-content-between font-weight-bold">
+                    
+                        <a class="d-block col-md-6" href="https://hwk42.github.io/blog/cloudnative/%E8%BE%B9%E7%BC%98ai%E5%9C%BA%E6%99%AF%E6%8A%80%E6%9C%AF%E9%80%89%E5%9E%8B/"> &laquo; 边缘AI场景技术选型(调度和存储)</a>
+                    
+                    
+                        <a class="d-block col-md-6 text-lg-right" href="https://hwk42.github.io/blog/cloudnative/k8s%E7%BD%91%E5%85%B3traefik%E5%AE%9E%E8%B7%B5/">K8s网关Traefik实践 &raquo;</a>
+                    
+                    <div class="clearfix"></div>
+                    </div>
+                    
+                </div>
+                
+            </div>
+        </div>
+        
+        
+<div class="container">
+    <div id="comments" class="row justify-content-center mb-5">
+        <div class="col-md-8">              
+                           
+        </div>
+    </div>
+</div>
+
+    </div>
+
+
+            </div>
+<div class="jumbotron fortags">
+	<div class="d-md-flex h-100">
+		<div class="col-md-4 transpdark align-self-center text-center h-100">
+			<div class="d-md-flex align-items-center justify-content-center h-100">
+				<h2 class="d-md-block d-none align-self-center py-1 font-weight-light">Explore <span class="d-none d-md-inline">→</span></h2>
+			</div>
+		</div>
+		<div class="col-md-8 p-5 align-self-center text-center">
+			
+			<a class="mt-1 mb-1" href="/tags/cbir">cbir</a>
+			
+			<a class="mt-1 mb-1" href="/tags/docker">docker</a>
+			
+			<a class="mt-1 mb-1" href="/tags/gpu">gpu</a>
+			
+			<a class="mt-1 mb-1" href="/tags/ingress">ingress</a>
+			
+			<a class="mt-1 mb-1" href="/tags/k8s">k8s</a>
+			
+			<a class="mt-1 mb-1" href="/tags/kubernetes">kubernetes</a>
+			
+			<a class="mt-1 mb-1" href="/tags/nfs">nfs</a>
+			
+			<a class="mt-1 mb-1" href="/tags/presto">presto</a>
+			
+			<a class="mt-1 mb-1" href="/tags/spark">spark</a>
+			
+			<a class="mt-1 mb-1" href="/tags/traefik">traefik</a>
+			
+			<a class="mt-1 mb-1" href="/tags/trino">trino</a>
+			
+			<a class="mt-1 mb-1" href="/tags/tutorial">tutorial</a>
+			
+			<a class="mt-1 mb-1" href="/tags/%E4%BA%91%E5%8E%9F%E7%94%9F">云原生</a>
+			
+			<a class="mt-1 mb-1" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E5%AD%98%E5%82%A8">分布式存储</a>
+			
+			<a class="mt-1 mb-1" href="/tags/%E5%88%86%E5%B8%83%E5%BC%8F%E8%AE%A1%E7%AE%97">分布式计算</a>
+			
+			<a class="mt-1 mb-1" href="/tags/%E5%A4%A7%E6%95%B0%E6%8D%AE">大数据</a>
+			
+			<a class="mt-1 mb-1" href="/tags/%E5%AD%98%E5%82%A8">存储</a>
+			
+			<a class="mt-1 mb-1" href="/tags/%E5%B7%A5%E5%85%B7">工具</a>
+			
+			<a class="mt-1 mb-1" href="/tags/%E6%8E%A8%E7%90%86">推理</a>
+			
+			<a class="mt-1 mb-1" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0">机器学习</a>
+			
+			<a class="mt-1 mb-1" href="/tags/%E7%9B%B8%E4%BC%BC%E6%80%A7%E6%90%9C%E7%B4%A2">相似性搜索</a>
+			
+		</div>
+	</div>
+</div>
+
+<footer class="footer">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 col-sm-6 text-center text-lg-left">
+                &copy; Copyright Walker - All rights reserved
+            </div>
+            <div class="col-md-6 col-sm-6 text-center text-lg-right">    
+                <a target="_blank" rel="noopener" href="https://www.wowthemes.net">Mediumish Theme</a> by WowThemes.net
+            </div>
+        </div>
+    </div>
+</footer>
+
+
+        </div>
+
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+<script src="/js/mediumish.js"></script>
+
+    </body>
+</html>

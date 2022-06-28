@@ -1,0 +1,9 @@
+content/
+.vscode
+config.toml
+static/
+themes/
+resources/
+docs/.DS_Store
+.DS_Store
+docs/images/.DS_Store
